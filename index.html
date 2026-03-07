@@ -1,852 +1,731 @@
 <!DOCTYPE html>
-<html lang="en">
+<html dir="rtl" lang="he">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Patent Auction — Soap Water Heater</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --cream: #F5EFE0;
-    --ink: #1A1208;
-    --warm: #C8622A;
-    --gold: #D4A017;
-    --steam: #E8D5B0;
-    --muted: #7A6A52;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--cream);
-    color: var(--ink);
-    font-family: 'DM Mono', monospace;
-    overflow-x: hidden;
-  }
-
-  /* Noise texture overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 0.4;
-  }
-
-  /* Steam animation */
-  @keyframes rise {
-    0% { transform: translateY(0) scaleX(1); opacity: 0.6; }
-    50% { transform: translateY(-40px) scaleX(1.3); opacity: 0.3; }
-    100% { transform: translateY(-80px) scaleX(0.8); opacity: 0; }
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(200, 98, 42, 0.4); }
-    50% { box-shadow: 0 0 0 12px rgba(200, 98, 42, 0); }
-  }
-
-  @keyframes ticker {
-    from { transform: translateX(100%); }
-    to { transform: translateX(-100%); }
-  }
-
-  /* Header */
-  header {
-    border-bottom: 2px solid var(--ink);
-    padding: 16px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--cream);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
-  .logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-  }
-
-  .logo span { color: var(--warm); }
-
-  .live-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--warm);
-    font-weight: 500;
-  }
-
-  .live-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--warm);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-  }
-
-  /* Ticker */
-  .ticker {
-    background: var(--ink);
-    color: var(--cream);
-    padding: 8px 0;
-    overflow: hidden;
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .ticker-inner {
-    display: flex;
-    white-space: nowrap;
-    animation: ticker 30s linear infinite;
-  }
-
-  .ticker-item {
-    padding: 0 40px;
-    opacity: 0.8;
-  }
-
-  .ticker-item strong { color: var(--gold); }
-
-  /* Hero */
-  .hero {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 85vh;
-    border-bottom: 2px solid var(--ink);
-  }
-
-  .hero-left {
-    padding: 60px 40px 60px 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-right: 2px solid var(--ink);
-    animation: fadeUp 0.8s ease forwards;
-  }
-
-  .patent-tag {
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .patent-tag::before {
-    content: '';
-    display: block;
-    width: 30px;
-    height: 1px;
-    background: var(--muted);
-  }
-
-  h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.8rem, 5vw, 4.5rem);
-    line-height: 1.05;
-    font-weight: 900;
-    letter-spacing: -0.03em;
-    margin-bottom: 8px;
-  }
-
-  h1 .accent { color: var(--warm); font-style: italic; }
-
-  .hebrew-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
-    color: var(--muted);
-    margin-bottom: 30px;
-    font-style: italic;
-    direction: rtl;
-  }
-
-  .description {
-    font-size: 0.8rem;
-    line-height: 1.8;
-    color: var(--muted);
-    max-width: 420px;
-    margin-bottom: 40px;
-  }
-
-  .patent-meta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 40px;
-  }
-
-  .meta-item {
-    border: 1px solid var(--steam);
-    padding: 12px 16px;
-    background: rgba(255,255,255,0.3);
-  }
-
-  .meta-label {
-    font-size: 0.55rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 4px;
-  }
-
-  .meta-value {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--ink);
-  }
-
-  /* Illustration side */
-  .hero-right {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px;
-    background: var(--steam);
-    position: relative;
-    overflow: hidden;
-    animation: fadeUp 0.8s 0.2s ease both;
-  }
-
-  .device-illustration {
-    position: relative;
-    width: 200px;
-    height: 280px;
-  }
-
-  .device-body {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 140px;
-    height: 200px;
-    background: linear-gradient(135deg, #D4956A, #C8622A);
-    border-radius: 12px 12px 8px 8px;
-    box-shadow: inset -8px 0 20px rgba(0,0,0,0.15), 4px 8px 20px rgba(0,0,0,0.1);
-  }
-
-  .device-top {
-    position: absolute;
-    bottom: 195px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90px;
-    height: 50px;
-    background: linear-gradient(135deg, #B85520, #9E4418);
-    border-radius: 8px 8px 0 0;
-  }
-
-  .device-pipe {
-    position: absolute;
-    bottom: 240px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 30px;
-    background: #8C3C12;
-    border-radius: 4px 4px 0 0;
-  }
-
-  .steam-puff {
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    background: rgba(255,255,255,0.5);
-    border-radius: 50%;
-    animation: rise 2.5s ease-in infinite;
-  }
-
-  .steam-puff:nth-child(1) { bottom: 268px; left: 85px; animation-delay: 0s; }
-  .steam-puff:nth-child(2) { bottom: 268px; left: 105px; animation-delay: 0.8s; width: 18px; height: 18px; }
-  .steam-puff:nth-child(3) { bottom: 268px; left: 65px; animation-delay: 1.5s; width: 20px; height: 20px; }
-
-  .device-screen {
-    position: absolute;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 50px;
-    background: rgba(0,0,0,0.3);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'DM Mono', monospace;
-    font-size: 1.2rem;
-    color: #FFD700;
-    letter-spacing: -0.05em;
-  }
-
-  .device-buttons {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-  }
-
-  .device-btn {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.25);
-  }
-
-  .patent-stamp {
-    position: absolute;
-    top: 30px;
-    right: 30px;
-    width: 90px;
-    height: 90px;
-    border: 3px solid var(--warm);
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 0.45rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--warm);
-    opacity: 0.7;
-    transform: rotate(12deg);
-  }
-
-  .patent-stamp strong { font-size: 0.9rem; display: block; font-family: 'Playfair Display', serif; }
-
-  /* Bid section */
-  .bid-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    border-bottom: 2px solid var(--ink);
-  }
-
-  .current-bid {
-    padding: 50px 60px;
-    border-right: 2px solid var(--ink);
-    animation: fadeUp 0.8s 0.4s ease both;
-  }
-
-  .section-label {
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 16px;
-  }
-
-  .bid-amount {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(3rem, 6vw, 5rem);
-    font-weight: 900;
-    color: var(--warm);
-    letter-spacing: -0.04em;
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-
-  .bid-leader {
-    font-size: 0.7rem;
-    color: var(--muted);
-    margin-bottom: 30px;
-  }
-
-  .bid-leader span { color: var(--ink); font-weight: 500; }
-
-  .countdown {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 40px;
-  }
-
-  .countdown-unit {
-    text-align: center;
-  }
-
-  .countdown-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--ink);
-  }
-
-  .countdown-label {
-    font-size: 0.5rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-
-  .countdown-sep {
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
-    color: var(--muted);
-    align-self: flex-start;
-    margin-top: 8px;
-  }
-
-  /* Bid form */
-  .bid-form {
-    padding: 50px 60px;
-    animation: fadeUp 0.8s 0.5s ease both;
-  }
-
-  .form-group {
-    margin-bottom: 20px;
-  }
-
-  label {
-    display: block;
-    font-size: 0.6rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="number"] {
-    width: 100%;
-    padding: 14px 16px;
-    border: 2px solid var(--ink);
-    background: transparent;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.85rem;
-    color: var(--ink);
-    outline: none;
-    transition: border-color 0.2s, background 0.2s;
-  }
-
-  input:focus {
-    border-color: var(--warm);
-    background: rgba(200,98,42,0.04);
-  }
-
-  .bid-btn {
-    width: 100%;
-    padding: 18px;
-    background: var(--ink);
-    color: var(--cream);
-    border: none;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .bid-btn::after {
-    content: '→';
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: right 0.2s;
-  }
-
-  .bid-btn:hover {
-    background: var(--warm);
-  }
-
-  .bid-btn:hover::after { right: 14px; }
-
-  .min-bid-note {
-    font-size: 0.6rem;
-    color: var(--muted);
-    margin-top: 10px;
-    text-align: center;
-  }
-
-  /* Bid history */
-  .bid-history {
-    padding: 50px 60px;
-    border-top: 2px solid var(--ink);
-    animation: fadeUp 0.8s 0.6s ease both;
-  }
-
-  .history-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 30px;
-  }
-
-  .bid-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .bid-table th {
-    font-size: 0.55rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-align: left;
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--steam);
-  }
-
-  .bid-table td {
-    padding: 14px 16px;
-    font-size: 0.75rem;
-    border-bottom: 1px solid var(--steam);
-  }
-
-  .bid-table tr:first-child td {
-    background: rgba(200,98,42,0.06);
-    font-weight: 500;
-  }
-
-  .bid-rank {
-    font-family: 'Playfair Display', serif;
-    font-weight: 900;
-    font-size: 1rem;
-    color: var(--warm);
-  }
-
-  .bid-rank.gold { color: var(--gold); }
-
-  /* Notification */
-  .notification {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: var(--ink);
-    color: var(--cream);
-    padding: 16px 24px;
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.4s ease;
-    z-index: 500;
-    max-width: 300px;
-    border-left: 3px solid var(--warm);
-  }
-
-  .notification.show { opacity: 1; transform: translateY(0); }
-  .notification.success { border-left-color: #4CAF50; }
-  .notification.error { border-left-color: #F44336; }
-
-  /* Footer */
-  footer {
-    padding: 30px 60px;
-    border-top: 2px solid var(--ink);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  @media (max-width: 768px) {
-    .hero, .bid-section { grid-template-columns: 1fr; }
-    .hero-left { border-right: none; border-bottom: 2px solid var(--ink); padding: 40px 24px; }
-    .hero-right { padding: 40px 24px; min-height: 340px; }
-    .current-bid { border-right: none; border-bottom: 2px solid var(--ink); padding: 30px 24px; }
-    .bid-form { padding: 30px 24px; }
-    .bid-history { padding: 30px 24px; }
-    header { padding: 14px 20px; }
-    footer { flex-direction: column; gap: 10px; padding: 20px 24px; }
-  }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>גלים-גישור - גלים</title>
+  <meta name="description" content="גלים-גישור - גישור ליווי ויעוץ למתגרשים">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alef:wght@400;700&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --main-color: #ceb4ad;
+      --main-color-dark: #b89890;
+      --text-dark: #333333;
+      --text-light: #ffffff;
+      --bg-light: #f7f9f8;
+      --bg-alt: #ebebeb;
+      --footer-bg: #333333;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Assistant', 'Alef', Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text-dark);
+      direction: rtl;
+    }
+
+    a { color: var(--main-color); text-decoration: none; }
+    a:hover { color: var(--main-color-dark); text-decoration: underline; }
+
+    img { max-width: 100%; height: auto; }
+
+    /* ── NAVBAR ── */
+    #mainNav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.97);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      height: 60px;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 20px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo img { height: 40px; width: auto; }
+    .nav-logo span {
+      font-family: 'Assistant', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--text-dark);
+    }
+
+    .nav-pages {
+      list-style: none;
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .nav-pages li a {
+      display: block;
+      padding: 8px 14px;
+      font-size: 15px;
+      color: var(--text-dark);
+      font-weight: 500;
+      border-radius: 4px;
+      transition: color 0.2s, background 0.2s;
+      letter-spacing: 0.03em;
+      text-decoration: none;
+    }
+    .nav-pages li a:hover,
+    .nav-pages li.active a {
+      color: var(--main-color);
+      background: rgba(206,180,173,0.08);
+    }
+
+    /* mobile menu */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      font-size: 22px;
+      color: var(--text-dark);
+    }
+    #mobileMenu {
+      display: none;
+      position: fixed;
+      top: 60px; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.98);
+      z-index: 999;
+      padding: 30px 20px;
+    }
+    #mobileMenu ul { list-style: none; }
+    #mobileMenu ul li { border-bottom: 1px solid #f0f0f0; }
+    #mobileMenu ul li a {
+      display: block;
+      padding: 14px 10px;
+      font-size: 17px;
+      color: var(--text-dark);
+      text-decoration: none;
+      text-align: center;
+    }
+    #mobileMenu ul li a:hover { color: var(--main-color); }
+    #mobileMenu.open { display: block; }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      margin-top: 60px;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.cdn-files-a.com/uploads/5875523/2000_643553242b76b_filter_643557420eb63.jpg');
+      background-size: cover;
+      background-position: center center;
+      filter: contrast(100%) saturate(125%);
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 60px 20px 80px;
+    }
+    .hero-content h1 {
+      font-family: 'Assistant', sans-serif;
+      font-size: clamp(60px, 10vw, 114px);
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+    .hero-content h2 {
+      font-family: 'Assistant', sans-serif;
+      font-size: clamp(24px, 4vw, 50px);
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      line-height: 1.2;
+    }
+
+    /* wave shape */
+    .hero-wave {
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      z-index: 3;
+      line-height: 0;
+    }
+    .hero-wave svg { width: 100%; height: auto; display: block; }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 60px 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* alternating bg */
+    .bg-primary-section { background: var(--bg-light); }
+
+    /* section title */
+    .section-title {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .section-title h2 {
+      font-family: 'Assistant', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+    }
+    .section-title hr {
+      width: 50px;
+      border: none;
+      border-top: 3px solid var(--main-color);
+      margin: 0 auto;
+    }
+
+    /* ── ABOUT ── */
+    .about-text {
+      font-size: 17px;
+      line-height: 1.8;
+      color: #444;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    /* ── TEAM ── */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      justify-items: center;
+    }
+    .team-member {
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+    }
+    .team-image {
+      width: 100%;
+      padding-top: 100%;
+      background-size: cover;
+      background-position: center;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    .team-member h4 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      padding-bottom: 14px;
+      position: relative;
+      display: inline-block;
+    }
+    .team-member h4::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 60px; height: 3px;
+      background: var(--main-color);
+    }
+    .team-member p {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.7;
+      margin-top: 12px;
+    }
+
+    /* ── CONTENT + IMAGE rows ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+    .two-col .col-text { font-size: 16px; line-height: 1.85; color: #444; }
+    .two-col .col-text a { color: var(--main-color); font-weight: 600; }
+    .two-col .col-img img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .two-col.reverse { direction: ltr; }
+    .two-col.reverse .col-text,
+    .two-col.reverse .col-img { direction: rtl; }
+
+    /* ── CONTACT FORM (top bar) ── */
+    .contact-bar {
+      background: var(--main-color);
+      padding: 30px 20px;
+    }
+    .contact-bar .section-title h2 { color: #fff; }
+    .contact-bar .section-title hr { border-color: rgba(255,255,255,0.5); }
+    .contact-bar-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .contact-bar-form .form-group { flex: 1 1 180px; }
+    .contact-bar-form label { display: block; font-size: 13px; color: rgba(255,255,255,0.85); margin-bottom: 4px; font-weight: 600; }
+    .contact-bar-form input {
+      width: 100%;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 4px;
+      font-size: 15px;
+      font-family: 'Assistant', sans-serif;
+      outline: none;
+    }
+    .contact-bar-form button {
+      padding: 10px 28px;
+      background: #fff;
+      color: var(--main-color);
+      border: none;
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Assistant', sans-serif;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+      align-self: flex-end;
+      height: 42px;
+    }
+    .contact-bar-form button:hover { background: var(--text-dark); color: #fff; }
+
+    /* ── CONTACT SECTION ── */
+    .contact-details {
+      list-style: none;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .contact-details li { margin-bottom: 10px; font-size: 17px; }
+    .contact-details li a { color: var(--text-dark); font-weight: 600; }
+    .contact-details li a:hover { color: var(--main-color); }
+    .contact-address { text-align: center; color: #666; margin-bottom: 30px; font-size: 15px; line-height: 1.7; }
+
+    .contact-form { max-width: 560px; margin: 0 auto; }
+    .contact-form .form-group { margin-bottom: 16px; }
+    .contact-form label { display: block; font-size: 14px; font-weight: 600; color: #555; margin-bottom: 5px; }
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 15px;
+      font-family: 'Assistant', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus { border-color: var(--main-color); }
+    .contact-form textarea { resize: vertical; min-height: 100px; }
+    .contact-form button {
+      width: 100%;
+      padding: 12px;
+      background: var(--main-color);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Assistant', sans-serif;
+      transition: background 0.2s;
+    }
+    .contact-form button:hover { background: var(--main-color-dark); }
+
+    .required-star { color: var(--main-color); margin-right: 2px; }
+
+    /* thank you message */
+    .thank-you { display: none; text-align: center; padding: 30px; color: var(--main-color); font-size: 20px; font-weight: 700; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--footer-bg);
+      color: #fff;
+      padding: 30px 20px;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.7); }
+
+    /* ── WHATSAPP FLOAT ── */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      z-index: 999;
+      background: #25d366;
+      color: #fff;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      font-size: 28px;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+    .whatsapp-float:hover { transform: scale(1.1); color: #fff; text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-pages { display: none; }
+      .mobile-menu-btn { display: block; }
+      .two-col { grid-template-columns: 1fr; }
+      .two-col.reverse { direction: rtl; }
+      .hero-content h1 { font-size: 56px; }
+      .hero-content h2 { font-size: 26px; }
+      .contact-bar-form .form-group { flex: 1 1 100%; }
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">Patent<span>Bid</span></div>
-  <div class="live-badge">
-    <div class="live-dot"></div>
-    Auction Live
+<!-- ── NAVBAR ── -->
+<nav id="mainNav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <img src="https://images.cdn-files-a.com/uploads/5875523/400_63947ead6c28d.png" alt="גלים-גישור">
+      <span>גלים-גישור</span>
+    </a>
+    <ul class="nav-pages">
+      <li class="active"><a href="#hero">בית</a></li>
+      <li><a href="#about">אודותינו</a></li>
+      <li><a href="#team">מי אנחנו</a></li>
+      <li><a href="#mediation">גישור</a></li>
+      <li><a href="#divorced-parents">הורים גרושים</a></li>
+      <li><a href="#children">ילדים בגירושים</a></li>
+      <li><a href="#chapter-b">פרק ב'</a></li>
+      <li><a href="#contact">צור קשר</a></li>
+    </ul>
+    <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="תפריט">☰</button>
   </div>
-</header>
+</nav>
 
-<div class="ticker">
-  <div class="ticker-inner">
-    <span class="ticker-item">Patent ID: <strong>WH-2024-7831</strong></span>
-    <span class="ticker-item">Category: <strong>Consumer Appliances · Hygiene</strong></span>
-    <span class="ticker-item">Filing Date: <strong>March 12, 2024</strong></span>
-    <span class="ticker-item">Inventor: <strong>Confidential</strong></span>
-    <span class="ticker-item">Status: <strong>Pending Grant</strong></span>
-    <span class="ticker-item">Total Bidders: <strong>14</strong></span>
-    <span class="ticker-item">Jurisdiction: <strong>IL · US · EU</strong></span>
+<!-- Mobile Menu -->
+<div id="mobileMenu">
+  <ul>
+    <li><a href="#hero" onclick="toggleMenu()">בית</a></li>
+    <li><a href="#about" onclick="toggleMenu()">אודותינו</a></li>
+    <li><a href="#team" onclick="toggleMenu()">מי אנחנו</a></li>
+    <li><a href="#mediation" onclick="toggleMenu()">גישור</a></li>
+    <li><a href="#divorced-parents" onclick="toggleMenu()">הורים גרושים</a></li>
+    <li><a href="#children" onclick="toggleMenu()">ילדים בגירושים</a></li>
+    <li><a href="#chapter-b" onclick="toggleMenu()">פרק ב'</a></li>
+    <li><a href="#contact" onclick="toggleMenu()">צור קשר</a></li>
+  </ul>
+</div>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1>גלים</h1>
+    <h2>גישור ליווי ויעוץ למתגרשים</h2>
+  </div>
+  <div class="hero-wave">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20" preserveAspectRatio="none" style="height:60px;">
+      <path d="M0,20 L0,8 C18,14 35,14 50,8 C72,0 87,-3 100,5 L100,20 Z" fill="#ffffff"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about" class="bg-primary-section">
+  <div class="container">
+    <div class="section-title">
+      <h2>אודותינו</h2>
+      <hr>
+    </div>
+    <p class="about-text">
+      מרכז גלים רואה לנגד עיניו את האנשים המעורבים בתהליך הגירושים.<br>
+      זוגות רבים מתגרשים, אחרים כבר גרושים, יש החושבים על פרק ב' או מצויים בו.<br>
+      מטבע הדברים תהליכים מורכבים אלו משפיעים על רווחתם של ילדי הזוג הנפרד או הגרוש.<br><br>
+      לצערנו ילדים רבים נפגעים מתהליך גירושים סוער של הוריהם, וזאת שלא לצורך.<br>
+      מרכז גלים שם לו כמטרה למזער נזקים בתהליך הגירושים ואף לעשותו חיובי ותוך שיתוף פעולה.<br>
+      אנו ערוכים לסוגיות רבות ויודעים לתת להן את המענה המתאים ביותר.<br><br>
+      מלבד פתרון בעיות ומזעור נזקים אנו גם מעצימים את בני המשפחה ויוצקים יסודות לתקשורת חיובית בהמשך הדרך.
+    </p>
+  </div>
+</section>
+
+<!-- ── TEAM ── -->
+<section id="team">
+  <div class="container">
+    <div class="section-title">
+      <h2>מי אנחנו</h2>
+      <hr>
+    </div>
+    <div class="team-grid">
+      <div class="team-member">
+        <div class="team-image" style="background-image: url('https://images.cdn-files-a.com/uploads/5875523/1200_63933e43df47f.jpg');"></div>
+        <h4>נדב הריס</h4>
+        <p>פסיכולוג קליני-מדריך, בעל ותק וניסיון של מעל 15 שנים בטיפול בילדים, מתבגרים ובוגרים ובתוך כך בנושאי הגירושים על כלל היבטיו.</p>
+      </div>
+      <div class="team-member">
+        <div class="team-image" style="background-image: url('https://images.cdn-files-a.com/uploads/5875523/1200_63933e61bddc5.jpg');"></div>
+        <h4>נורית הריס</h4>
+        <p>עו"ד ומגשרת בדיני משפחה בעלת ותק וניסיון של מעל 10 שנים בגישור ובפתרון מחלוקות בתחומים אלו.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT BAR ── -->
+<div class="contact-bar">
+  <div class="container">
+    <div class="section-title">
+      <h2>צור קשר</h2>
+      <hr>
+    </div>
+    <form class="contact-bar-form" onsubmit="submitBarForm(event)">
+      <div class="form-group">
+        <label>שם <span style="color:#fff">*</span></label>
+        <input type="text" placeholder="שם" required>
+      </div>
+      <div class="form-group">
+        <label>טלפון</label>
+        <input type="text" placeholder="טלפון">
+      </div>
+      <div class="form-group">
+        <label>שדה טקסט</label>
+        <input type="text" placeholder="שדה טקסט">
+      </div>
+      <button type="submit">צור קשר</button>
+    </form>
+    <div id="barThankYou" class="thank-you" style="color:#fff;">תודה! נחזור אליך בהקדם.</div>
   </div>
 </div>
 
-<section class="hero">
-  <div class="hero-left">
-    <div class="patent-tag">Patent Pending · Exclusive Auction</div>
-    <h1>Soap Water<br><span class="accent">Heater</span></h1>
-    <div class="hebrew-title">מחמם מים לסבונים</div>
-    <p class="description">
-      A compact, precision-controlled water heating device engineered specifically for soap production and personal care manufacturing. Maintains optimal temperature ranges for saponification, enabling consistent batch quality. Features smart temperature feedback, rapid heat-up, and food-grade materials throughout.
-    </p>
-    <div class="patent-meta">
-      <div class="meta-item">
-        <div class="meta-label">Patent ID</div>
-        <div class="meta-value">WH-2024-7831</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-label">Jurisdiction</div>
-        <div class="meta-value">IL · US · EU</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-label">Claims</div>
-        <div class="meta-value">12 Independent</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-label">Status</div>
-        <div class="meta-value">Pending Grant</div>
-      </div>
+<!-- ── MEDIATION ── -->
+<section id="mediation">
+  <div class="container">
+    <div class="section-title">
+      <h2>גישור</h2>
+      <hr>
     </div>
-  </div>
-
-  <div class="hero-right">
-    <div class="patent-stamp">
-      <strong>Patent</strong>
-      Pending
-      <br>IL-2024
-    </div>
-    <div class="device-illustration">
-      <div class="steam-puff"></div>
-      <div class="steam-puff"></div>
-      <div class="steam-puff"></div>
-      <div class="device-pipe"></div>
-      <div class="device-top"></div>
-      <div class="device-body">
-        <div class="device-screen" id="tempDisplay">72°C</div>
-        <div class="device-buttons">
-          <div class="device-btn"></div>
-          <div class="device-btn"></div>
-          <div class="device-btn"></div>
-        </div>
+    <div class="two-col">
+      <div class="col-text">
+        גירושים הינם תהליך מורכב. בני הזוג הנפרדים ונדרשים לקבל החלטות מורכבות בתקופה סוערת.<br><br>
+        ישנן אמוציות בין בני הזוג, יש צורך להשתלט על נושאים פיננסיים מסובכים ובנוסף, ההתנהלות מול הילדים הינה מורכבת.<br><br>
+        בתוך כך הזוג הנפרד נדרש לתמרן בין אתגרים אלו ואחרים. פעמים רבות מעורבים גורמים נוספים שלהם כוונות טובות או אינטרסים אישיים, למשל עו"ד שמנסים למשוך כל צד לכיוון אחר כי הדבר עשוי למקסם את שכר הטרחה שהם גובים.<br><br>
+        על יתרונות הגישור <a href="#contact">קרא עוד...</a>
+      </div>
+      <div class="col-img">
+        <img src="https://images.cdn-files-a.com/ready_uploads/media/14965/400_5cdad9d6c6b2b.jpg" alt="גישור">
       </div>
     </div>
   </div>
 </section>
 
-<section class="bid-section">
-  <div class="current-bid">
-    <div class="section-label">Current Leading Bid</div>
-    <div class="bid-amount" id="currentBid">$18,500</div>
-    <div class="bid-leader">Leading bidder: <span id="leader">Anonymous_J***</span></div>
-    
-    <div class="section-label" style="margin-bottom:12px;">Auction Closes In</div>
-    <div class="countdown">
-      <div class="countdown-unit">
-        <div class="countdown-num" id="days">03</div>
-        <div class="countdown-label">Days</div>
+<!-- ── DIVORCED PARENTS ── -->
+<section id="divorced-parents" class="bg-primary-section">
+  <div class="container">
+    <div class="section-title">
+      <h2>הורים גרושים</h2>
+      <hr>
+    </div>
+    <div class="two-col reverse">
+      <div class="col-img">
+        <img src="https://images.cdn-files-a.com/ready_uploads/media/18861/400_5cdba51e2b495.jpg" alt="הורים גרושים">
       </div>
-      <div class="countdown-sep">:</div>
-      <div class="countdown-unit">
-        <div class="countdown-num" id="hours">14</div>
-        <div class="countdown-label">Hours</div>
-      </div>
-      <div class="countdown-sep">:</div>
-      <div class="countdown-unit">
-        <div class="countdown-num" id="minutes">22</div>
-        <div class="countdown-label">Min</div>
-      </div>
-      <div class="countdown-sep">:</div>
-      <div class="countdown-unit">
-        <div class="countdown-num" id="seconds">08</div>
-        <div class="countdown-label">Sec</div>
+      <div class="col-text">
+        הורים גרושים נדרשים לאתגרים רבים: היחסים עם הילדים עוברים שינוי, היבטים רבים בחיי היומיום עוברים שינוי, כמו ניהול משק בית או התארגנות שונה במקום העבודה או מול אנשים במעגלים שונים, גרושים עשויים לחוות לעיתים בדידות. ועוד....<br><br>
+        גם לגרושים 'ותיקים' אתגרים רבים, למשל פרקי ב' עם או בלי ילדים משלבים קודמים.<br><br>
+        ובכלל, גרושים הם גם הורים לכל דבר ועניין, ולכן נתקלים גם בסוגיות אוניברסליות בתחום ההורות.<br><br>
+        <a href="#contact">קרא עוד...</a>
       </div>
     </div>
-
-    <div style="font-size:0.65rem; color:var(--muted); line-height:1.8; max-width:380px;">
-      Winner receives full patent rights, all documentation, prototype designs, and a 30-minute technical briefing with the inventor. International transfer available.
-    </div>
-  </div>
-
-  <div class="bid-form">
-    <div class="section-label">Place Your Bid</div>
-    <div class="form-group">
-      <label>Full Name</label>
-      <input type="text" id="bidderName" placeholder="Your name or company">
-    </div>
-    <div class="form-group">
-      <label>Email Address</label>
-      <input type="email" id="bidderEmail" placeholder="contact@company.com">
-    </div>
-    <div class="form-group">
-      <label>Bid Amount (USD)</label>
-      <input type="number" id="bidAmount" placeholder="Min. $19,000" min="19000" step="500">
-    </div>
-    <button class="bid-btn" onclick="placeBid()">Submit Bid</button>
-    <div class="min-bid-note">Minimum bid increment: $500 · All bids are binding</div>
   </div>
 </section>
 
-<section class="bid-history">
-  <div class="history-title">Bid History</div>
-  <table class="bid-table">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Bidder</th>
-        <th>Amount</th>
-        <th>Time</th>
-      </tr>
-    </thead>
-    <tbody id="bidTableBody">
-      <tr>
-        <td><span class="bid-rank gold">#1</span></td>
-        <td>Anonymous_J***</td>
-        <td>$18,500</td>
-        <td>2 min ago</td>
-      </tr>
-      <tr>
-        <td><span class="bid-rank">#2</span></td>
-        <td>CleanCo Industries</td>
-        <td>$17,000</td>
-        <td>38 min ago</td>
-      </tr>
-      <tr>
-        <td><span class="bid-rank">#3</span></td>
-        <td>R&D Ventures LLC</td>
-        <td>$15,500</td>
-        <td>1h 12m ago</td>
-      </tr>
-      <tr>
-        <td><span class="bid-rank">#4</span></td>
-        <td>Anonymous_T***</td>
-        <td>$14,000</td>
-        <td>3h ago</td>
-      </tr>
-      <tr>
-        <td><span class="bid-rank">#5</span></td>
-        <td>BioSoap Global</td>
-        <td>$12,000</td>
-        <td>5h ago</td>
-      </tr>
-    </tbody>
-  </table>
+<!-- ── CHILDREN ── -->
+<section id="children">
+  <div class="container">
+    <div class="section-title">
+      <h2>ילדים בגירושים</h2>
+      <hr>
+    </div>
+    <div class="two-col">
+      <div class="col-text">
+        ילדים להורים גרושים חווים בתדירות גבוהה צורך להתאים עצמם למצבים משתנים. ראשית הפרידה בין ההורים - תהליך מורכב שלעיתים קרובות מפר למרבית הילדים את תחושת הביטחון בתא משפחתי יציב ועמיד לשינויים.<br><br>
+        גם כאשר כל המעורבים מבינים שהדבר הנכון הוא לסיים את החלק הזוגי בקשר בין ההורים, עדיין הילדים יחוו קושי רב להסתגל למצב החדש.<br><br>
+        <a href="#contact">קרא עוד...</a>
+      </div>
+      <div class="col-img">
+        <img src="https://images.cdn-files-a.com/ready_uploads/media/5356799/400_5ef9eff58d36b.jpg" alt="ילדים בגירושים">
+      </div>
+    </div>
+  </div>
 </section>
 
+<!-- ── CHAPTER B ── -->
+<section id="chapter-b" class="bg-primary-section">
+  <div class="container">
+    <div class="section-title">
+      <h2>פרק ב'</h2>
+      <hr>
+    </div>
+    <div class="two-col reverse">
+      <div class="col-img">
+        <img src="https://images.cdn-files-a.com/ready_uploads/media/3246656/400_5e145f35d855b.jpg" alt="פרק ב'">
+      </div>
+      <div class="col-text">
+        פעמים רבות בסמוך לגירושים בני זוג שהתגרשו מכריזים 'לא עוד! אני עם זה סיימתי...', אך הניסיון מראה אחרת.<br><br>
+        לאו דווקא חתונה נוספת אבל נוצרות מערכות יחסים זוגיות, יציבות, אוהבות ומשמעותיות. אך לא הכל ורוד, יש צורך בהתאמות, לעיתים ישנם ילדים משלבים קודמים שצריכים להסתדר זה עם זה או עם פרטנר.ית של ההורה ועוד...<br><br>
+        לא חסרות מורכבויות וכתוצאה מכך רבים הקונפלקטים והתהיות. חלק מהסוגיות הינן רגשיות ונוגעות בהדרכות הורים, חלקן משפטיות וחלקן הן גם וגם. ניתן להמציא את הגלגל ולהתמודד כל פעם מחדש וניתן לעשות זאת אחרת ולהתייעץ.<br><br>
+        <a href="#contact">קרא עוד...</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="container">
+    <div class="section-title">
+      <h2>צור קשר</h2>
+      <hr>
+    </div>
+    <ul class="contact-details">
+      <li><a href="tel:+972-052-624-4021">📞 +972-052-624-4021</a></li>
+      <li><a href="mailto:info@galim-gishur.co.il">✉️ info@galim-gishur.co.il</a></li>
+    </ul>
+    <p class="contact-address">דרך הכרם 1, קיבוץ יגור<br>אבן גבירול 30, תל אביב</p>
+    <form class="contact-form" onsubmit="submitContactForm(event)">
+      <div class="form-group">
+        <label>שם <span class="required-star">*</span></label>
+        <input type="text" placeholder="שם" required>
+      </div>
+      <div class="form-group">
+        <label>טלפון <span class="required-star">*</span></label>
+        <input type="text" placeholder="טלפון" required>
+      </div>
+      <div class="form-group">
+        <label>כתובת הדואר האלקטרוני שלך <span class="required-star">*</span></label>
+        <input type="email" placeholder="כתובת הדואר האלקטרוני שלך" required>
+      </div>
+      <div class="form-group">
+        <label>הודעה</label>
+        <textarea placeholder="הודעה"></textarea>
+      </div>
+      <button type="submit">צור קשר</button>
+    </form>
+    <div id="contactThankYou" class="thank-you">תודה! נחזור אליך בהקדם.</div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
 <footer>
-  <div>© 2024 PatentBid · All Rights Reserved</div>
-  <div>Auction ID: WH-2024-7831</div>
-  <div>Terms & Conditions Apply</div>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-name">גלים-גישור</div>
+      <div class="footer-copy">זכויות יוצרים © 2026 כל הזכויות שמורות</div>
+    </div>
+  </div>
 </footer>
 
-<div class="notification" id="notification"></div>
+<!-- WhatsApp float -->
+<a class="whatsapp-float" href="https://wa.me/972526244021" target="_blank" title="WhatsApp" aria-label="WhatsApp">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="28" height="28">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+  </svg>
+</a>
 
 <script>
-  // Countdown timer (72h, 14min, 22sec from now)
-  const endTime = new Date();
-  endTime.setHours(endTime.getHours() + 72);
-  endTime.setMinutes(endTime.getMinutes() + 14);
-  endTime.setSeconds(endTime.getSeconds() + 22);
-
-  function updateCountdown() {
-    const now = new Date();
-    const diff = endTime - now;
-    if (diff <= 0) return;
-    const d = Math.floor(diff / 86400000);
-    const h = Math.floor((diff % 86400000) / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
-    document.getElementById('days').textContent = String(d).padStart(2,'0');
-    document.getElementById('hours').textContent = String(h).padStart(2,'0');
-    document.getElementById('minutes').textContent = String(m).padStart(2,'0');
-    document.getElementById('seconds').textContent = String(s).padStart(2,'0');
-  }
-  setInterval(updateCountdown, 1000);
-  updateCountdown();
-
-  // Animated temp display
-  let temps = [68, 70, 72, 74, 72, 70, 68];
-  let ti = 0;
-  setInterval(() => {
-    ti = (ti + 1) % temps.length;
-    document.getElementById('tempDisplay').textContent = temps[ti] + '°C';
-  }, 2000);
-
-  // Bids state
-  let currentBidValue = 18500;
-  let bids = [
-    { name: 'Anonymous_J***', amount: 18500, time: '2 min ago' },
-    { name: 'CleanCo Industries', amount: 17000, time: '38 min ago' },
-    { name: 'R&D Ventures LLC', amount: 15500, time: '1h 12m ago' },
-    { name: 'Anonymous_T***', amount: 14000, time: '3h ago' },
-    { name: 'BioSoap Global', amount: 12000, time: '5h ago' },
-  ];
-
-  function showNotif(msg, type) {
-    const n = document.getElementById('notification');
-    n.textContent = msg;
-    n.className = 'notification show ' + (type || '');
-    setTimeout(() => n.className = 'notification', 3500);
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
   }
 
-  function placeBid() {
-    const name = document.getElementById('bidderName').value.trim();
-    const email = document.getElementById('bidderEmail').value.trim();
-    const amount = parseInt(document.getElementById('bidAmount').value);
-    const min = currentBidValue + 500;
+  // Close mobile menu on outside click
+  document.addEventListener('click', function(e) {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.querySelector('.mobile-menu-btn');
+    if (menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+      menu.classList.remove('open');
+    }
+  });
 
-    if (!name) return showNotif('Please enter your name.', 'error');
-    if (!email || !email.includes('@')) return showNotif('Please enter a valid email.', 'error');
-    if (!amount || amount < min) return showNotif(`Minimum bid is $${min.toLocaleString()}.`, 'error');
+  // Smooth scroll + active nav
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
 
-    // Update state
-    currentBidValue = amount;
-    const masked = name.length > 4 ? name.substring(0,3) + '***' : name + '***';
-    bids.unshift({ name: masked, amount, time: 'Just now' });
+  // Active nav on scroll
+  const sections = document.querySelectorAll('section[id], div[id="contact"]');
+  const navLinks = document.querySelectorAll('.nav-pages li a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 80) current = s.getAttribute('id');
+    });
+    navLinks.forEach(a => {
+      a.parentElement.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  });
 
-    document.getElementById('currentBid').textContent = '$' + amount.toLocaleString();
-    document.getElementById('leader').textContent = masked;
-    document.getElementById('bidAmount').value = '';
-    document.getElementById('bidderName').value = '';
-    document.getElementById('bidderEmail').value = '';
-    document.getElementById('bidAmount').min = amount + 500;
-    document.querySelector('.bid-form input[type=number]').placeholder = 'Min. $' + (amount + 500).toLocaleString();
-
-    renderTable();
-    showNotif('🎉 Bid placed successfully! You are the current leader.', 'success');
+  // Form submissions
+  function submitBarForm(e) {
+    e.preventDefault();
+    e.target.style.display = 'none';
+    document.getElementById('barThankYou').style.display = 'block';
   }
-
-  function renderTable() {
-    const body = document.getElementById('bidTableBody');
-    body.innerHTML = bids.slice(0, 8).map((b, i) => `
-      <tr>
-        <td><span class="bid-rank ${i===0?'gold':''}">#${i+1}</span></td>
-        <td>${b.name}</td>
-        <td>$${b.amount.toLocaleString()}</td>
-        <td>${b.time}</td>
-      </tr>
-    `).join('');
+  function submitContactForm(e) {
+    e.preventDefault();
+    e.target.style.display = 'none';
+    document.getElementById('contactThankYou').style.display = 'block';
   }
 </script>
 </body>
