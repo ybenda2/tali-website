@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>אודותינו - גלים-גישור</title>
+  <meta name="description" content="אודותינו - גלים-גישור - גישור ליווי ויעוץ למתגרשים">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alef:wght@400;700&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --main-color: #ceb4ad;
+      --main-color-dark: #b89890;
+      --text-dark: #333333;
+      --bg-light: #f7f9f8;
+      --bg-alt: #ebebeb;
+      --footer-bg: #333333;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Assistant', 'Alef', Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text-dark);
+      direction: rtl;
+    }
+
+    a { color: var(--main-color); text-decoration: none; }
+    a:hover { color: var(--main-color-dark); text-decoration: underline; }
+    img { max-width: 100%; height: auto; }
+
+    /* ── NAVBAR ── */
+    #mainNav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.97);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      height: 60px;
+      display: flex;
+      align-items: center;
+    }
+    .nav-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 20px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo img { height: 40px; width: auto; }
+    .nav-logo span {
+      font-family: 'Assistant', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--text-dark);
+    }
+    .nav-pages {
+      list-style: none;
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .nav-pages li a {
+      display: block;
+      padding: 8px 14px;
+      font-size: 15px;
+      color: var(--text-dark);
+      font-weight: 500;
+      border-radius: 4px;
+      transition: color 0.2s, background 0.2s;
+      text-decoration: none;
+    }
+    .nav-pages li a:hover,
+    .nav-pages li.active a {
+      color: var(--main-color);
+      background: rgba(206,180,173,0.08);
+    }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      font-size: 22px;
+      color: var(--text-dark);
+    }
+    #mobileMenu {
+      display: none;
+      position: fixed;
+      top: 60px; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.98);
+      z-index: 999;
+      padding: 30px 20px;
+      overflow-y: auto;
+    }
+    #mobileMenu ul { list-style: none; }
+    #mobileMenu ul li { border-bottom: 1px solid #f0f0f0; }
+    #mobileMenu ul li a {
+      display: block;
+      padding: 14px 10px;
+      font-size: 17px;
+      color: var(--text-dark);
+      text-decoration: none;
+      text-align: center;
+    }
+    #mobileMenu ul li a:hover,
+    #mobileMenu ul li.active a { color: var(--main-color); }
+    #mobileMenu.open { display: block; }
+
+    /* ── PAGE HEADER BANNER ── */
+    .page-banner {
+      margin-top: 60px;
+      background: var(--bg-light);
+      border-bottom: 3px solid var(--main-color);
+      padding: 48px 20px 36px;
+      text-align: center;
+    }
+    .page-banner h1 {
+      font-family: 'Assistant', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+    }
+    .page-banner hr {
+      width: 60px;
+      border: none;
+      border-top: 3px solid var(--main-color);
+      margin: 0 auto;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .content-section {
+      padding: 60px 20px;
+      background: #ffffff;
+    }
+
+    .about-text-block {
+      max-width: 820px;
+      margin: 0 auto;
+      font-size: 17px;
+      line-height: 1.95;
+      color: #444;
+    }
+
+    .about-text-block p {
+      margin-bottom: 16px;
+    }
+
+    /* highlight box */
+    .highlight-box {
+      background: var(--bg-light);
+      border-right: 4px solid var(--main-color);
+      padding: 24px 28px;
+      border-radius: 0 8px 8px 0;
+      margin: 32px 0;
+      font-size: 17px;
+      line-height: 1.9;
+      color: #444;
+    }
+
+    /* values grid */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .value-card {
+      background: var(--bg-light);
+      border-radius: 8px;
+      padding: 28px 24px;
+      text-align: center;
+      border-top: 3px solid var(--main-color);
+      transition: box-shadow 0.2s;
+    }
+    .value-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.07); }
+    .value-card .icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .value-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+    .value-card p {
+      font-size: 15px;
+      color: #666;
+      line-height: 1.7;
+    }
+
+    /* section divider */
+    .section-divider {
+      padding: 60px 20px;
+      background: var(--bg-light);
+    }
+    .section-title {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .section-title h2 {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+    }
+    .section-title hr {
+      width: 50px;
+      border: none;
+      border-top: 3px solid var(--main-color);
+      margin: 0 auto;
+    }
+
+    /* breadcrumb */
+    .breadcrumb {
+      background: #fff;
+      padding: 10px 20px;
+      border-bottom: 1px solid #eee;
+      font-size: 13px;
+      color: #999;
+    }
+    .breadcrumb a { color: var(--main-color); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb span { margin: 0 6px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--footer-bg);
+      color: #fff;
+      padding: 30px 20px;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.7); }
+    .footer-nav { list-style: none; display: flex; gap: 16px; flex-wrap: wrap; }
+    .footer-nav li a { color: rgba(255,255,255,0.8); font-size: 14px; text-decoration: none; }
+    .footer-nav li a:hover { color: #fff; text-decoration: underline; }
+
+    /* ── WHATSAPP ── */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 24px; left: 24px;
+      z-index: 999;
+      background: #25d366;
+      color: #fff;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+    .whatsapp-float:hover { transform: scale(1.1); color: #fff; text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-pages { display: none; }
+      .mobile-menu-btn { display: block; }
+      .page-banner h1 { font-size: 28px; }
+      .about-text-block { font-size: 16px; }
+      .highlight-box { padding: 18px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav id="mainNav">
+  <div class="nav-inner">
+    <a href="galim-gishur.html" class="nav-logo">
+      <img src="https://images.cdn-files-a.com/uploads/5875523/400_63947ead6c28d.png" alt="גלים-גישור">
+      <span>גלים-גישור</span>
+    </a>
+    <ul class="nav-pages">
+      <li><a href="galim-gishur.html">בית</a></li>
+      <li class="active"><a href="about-us.html">אודותינו</a></li>
+      <li><a href="galim-gishur.html#team">מי אנחנו</a></li>
+      <li><a href="galim-gishur.html#mediation">גישור</a></li>
+      <li><a href="galim-gishur.html#divorced-parents">הורים גרושים</a></li>
+      <li><a href="galim-gishur.html#children">ילדים בגירושים</a></li>
+      <li><a href="galim-gishur.html#chapter-b">פרק ב'</a></li>
+      <li><a href="galim-gishur.html#contact">צור קשר</a></li>
+    </ul>
+    <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="תפריט">☰</button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobileMenu">
+  <ul>
+    <li><a href="galim-gishur.html" onclick="toggleMenu()">בית</a></li>
+    <li class="active"><a href="about-us.html" onclick="toggleMenu()">אודותינו</a></li>
+    <li><a href="galim-gishur.html#team" onclick="toggleMenu()">מי אנחנו</a></li>
+    <li><a href="galim-gishur.html#mediation" onclick="toggleMenu()">גישור</a></li>
+    <li><a href="galim-gishur.html#divorced-parents" onclick="toggleMenu()">הורים גרושים</a></li>
+    <li><a href="galim-gishur.html#children" onclick="toggleMenu()">ילדים בגירושים</a></li>
+    <li><a href="galim-gishur.html#chapter-b" onclick="toggleMenu()">פרק ב'</a></li>
+    <li><a href="galim-gishur.html#contact" onclick="toggleMenu()">צור קשר</a></li>
+  </ul>
+</div>
+
+<!-- ── BREADCRUMB ── -->
+<div class="breadcrumb">
+  <a href="galim-gishur.html">בית</a>
+  <span>›</span>
+  <span>אודותינו</span>
+</div>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-banner">
+  <h1>אודותינו</h1>
+  <hr>
+</div>
+
+<!-- ── MAIN CONTENT ── -->
+<section class="content-section">
+  <div class="container">
+    <div class="about-text-block">
+      <p>
+        מרכז גלים רואה לנגד עיניו את האנשים המעורבים בתהליך הגירושים.
+        זוגות רבים מתגרשים, אחרים כבר גרושים, יש החושבים על פרק ב' או מצויים בו.
+        מטבע הדברים תהליכים מורכבים אלו משפיעים על רווחתם של ילדי הזוג הנפרד או הגרוש.
+      </p>
+      <p>
+        לצערנו ילדים רבים נפגעים מתהליך גירושים סוער של הוריהם, וזאת שלא לצורך.
+        מרכז גלים שם לו כמטרה למזער נזקים בתהליך הגירושים ואף לעשותו חיובי ותוך שיתוף פעולה.
+      </p>
+
+      <div class="highlight-box">
+        אנו ערוכים לסוגיות רבות ויודעים לתת להן את המענה המתאים ביותר.<br>
+        מלבד פתרון בעיות ומזעור נזקים אנו גם מעצימים את בני המשפחה ויוצקים יסודות לתקשורת חיובית בהמשך הדרך.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── VALUES ── -->
+<section class="section-divider">
+  <div class="container">
+    <div class="section-title">
+      <h2>הערכים שלנו</h2>
+      <hr>
+    </div>
+    <div class="values-grid">
+      <div class="value-card">
+        <span class="icon">🤝</span>
+        <h3>שיתוף פעולה</h3>
+        <p>אנו מאמינים שגירושים יכולים להתנהל בשיתוף פעולה ובכבוד הדדי, לטובת כל בני המשפחה.</p>
+      </div>
+      <div class="value-card">
+        <span class="icon">👨‍👩‍👧‍👦</span>
+        <h3>מרכזיות הילד</h3>
+        <p>רווחתם של הילדים היא במרכז כל פעולה ועצה שאנו נותנים, ואנו פועלים למזעור הנזק עליהם.</p>
+      </div>
+      <div class="value-card">
+        <span class="icon">⚖️</span>
+        <h3>מקצועיות</h3>
+        <p>שילוב ייחודי של ידע פסיכולוגי ומשפטי מאפשר לנו לתת מענה מקיף ומקצועי בכל היבטי הגירושים.</p>
+      </div>
+      <div class="value-card">
+        <span class="icon">💛</span>
+        <h3>חמלה ואמפתיה</h3>
+        <p>אנו מבינים שזוהי תקופה קשה ומורכבת, ומלווים את לקוחותינו בגישה אנושית ורגישה.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="content-section" style="text-align:center; padding: 50px 20px;">
+  <div class="container">
+    <h2 style="font-size:22px; font-weight:700; margin-bottom:12px; color:var(--text-dark);">רוצים לדעת עוד?</h2>
+    <p style="color:#666; margin-bottom:24px; font-size:16px;">צרו איתנו קשר ונשמח לענות על כל שאלה</p>
+    <a href="galim-gishur.html#contact"
+       style="display:inline-block; background:var(--main-color); color:#fff; padding:12px 36px; border-radius:4px; font-size:16px; font-weight:700; text-decoration:none; transition:background 0.2s;"
+       onmouseover="this.style.background='#b89890'"
+       onmouseout="this.style.background='var(--main-color)'">
+      צור קשר
+    </a>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-name">גלים-גישור</div>
+      <div class="footer-copy">זכויות יוצרים © 2026 כל הזכויות שמורות</div>
+    </div>
+    <ul class="footer-nav">
+      <li><a href="galim-gishur.html">בית</a></li>
+      <li><a href="about-us.html">אודותינו</a></li>
+      <li><a href="galim-gishur.html#contact">צור קשר</a></li>
+    </ul>
+  </div>
+</footer>
+
+<!-- WhatsApp float -->
+<a class="whatsapp-float" href="https://wa.me/972526244021" target="_blank" title="WhatsApp" aria-label="WhatsApp">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="28" height="28">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+  </svg>
+</a>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.querySelector('.mobile-menu-btn');
+    if (menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+      menu.classList.remove('open');
+    }
+  });
+</script>
+</body>
+</html>
