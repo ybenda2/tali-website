@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ילדים בגירושים - גלים-גישור</title>
+  <meta name="description" content="ילדים בגירושים - גלים-גישור - גישור ליווי ויעוץ למתגרשים">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alef:wght@400;700&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --main-color: #ceb4ad;
+      --main-color-dark: #b89890;
+      --text-dark: #333333;
+      --bg-light: #f7f9f8;
+      --bg-alt: #ebebeb;
+      --footer-bg: #333333;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Assistant', 'Alef', Arial, sans-serif; font-size: 16px; line-height: 1.6; color: var(--text-dark); direction: rtl; }
+    a { color: var(--main-color); text-decoration: none; }
+    a:hover { color: var(--main-color-dark); text-decoration: underline; }
+    img { max-width: 100%; height: auto; border-radius: 8px; }
+
+    /* NAVBAR */
+    #mainNav { position: fixed; top:0; left:0; right:0; z-index:1000; background:rgba(255,255,255,0.97); box-shadow:0 2px 10px rgba(0,0,0,0.08); height:60px; display:flex; align-items:center; }
+    .nav-inner { max-width:1140px; margin:0 auto; padding:0 20px; width:100%; display:flex; align-items:center; justify-content:space-between; }
+    .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+    .nav-logo img { height:40px; width:auto; border-radius:0; }
+    .nav-logo span { font-family:'Assistant',sans-serif; font-weight:700; font-size:18px; color:var(--text-dark); }
+    .nav-pages { list-style:none; display:flex; gap:4px; align-items:center; }
+    .nav-pages li a { display:block; padding:8px 14px; font-size:15px; color:var(--text-dark); font-weight:500; border-radius:4px; transition:color 0.2s,background 0.2s; text-decoration:none; }
+    .nav-pages li a:hover, .nav-pages li.active a { color:var(--main-color); background:rgba(206,180,173,0.08); }
+    .mobile-menu-btn { display:none; background:none; border:none; cursor:pointer; padding:8px; font-size:22px; color:var(--text-dark); }
+    #mobileMenu { display:none; position:fixed; top:60px; left:0; right:0; bottom:0; background:rgba(255,255,255,0.98); z-index:999; padding:30px 20px; overflow-y:auto; }
+    #mobileMenu ul { list-style:none; }
+    #mobileMenu ul li { border-bottom:1px solid #f0f0f0; }
+    #mobileMenu ul li a { display:block; padding:14px 10px; font-size:17px; color:var(--text-dark); text-decoration:none; text-align:center; }
+    #mobileMenu ul li a:hover, #mobileMenu ul li.active a { color:var(--main-color); }
+    #mobileMenu.open { display:block; }
+
+    /* BREADCRUMB */
+    .breadcrumb { background:#fff; padding:10px 20px; border-bottom:1px solid #eee; font-size:13px; color:#999; margin-top:60px; }
+    .breadcrumb a { color:var(--main-color); text-decoration:none; }
+    .breadcrumb a:hover { text-decoration:underline; }
+    .breadcrumb span { margin:0 6px; }
+
+    /* PAGE BANNER */
+    .page-banner { background:var(--bg-light); border-bottom:3px solid var(--main-color); padding:40px 20px 32px; text-align:center; }
+    .page-banner h1 { font-family:'Assistant',sans-serif; font-size:34px; font-weight:700; color:var(--text-dark); margin-bottom:12px; }
+    .page-banner hr { width:60px; border:none; border-top:3px solid var(--main-color); margin:0 auto; }
+
+    /* CONTENT */
+    .container { max-width:1100px; margin:0 auto; }
+    .content-section { padding:55px 20px; }
+    .content-section.alt { background:var(--bg-light); }
+
+    /* TEXT */
+    .content-text { font-size:17px; line-height:1.9; color:#444; max-width:860px; margin:0 auto; }
+    .content-text p { margin-bottom:18px; }
+    .content-text strong { color:var(--text-dark); }
+    .content-text br + strong, .content-text strong:first-child { display:block; margin-top:28px; margin-bottom:4px; font-size:18px; }
+
+    /* TWO-COL layout */
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; max-width:1000px; margin:0 auto; }
+    .two-col.img-left { direction:ltr; }
+    .two-col.img-left > * { direction:rtl; }
+    .two-col .col-img img { width:100%; border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,0.1); }
+    .two-col .col-text { font-size:16px; line-height:1.9; color:#444; }
+
+    /* TEAM */
+    .team-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:40px; justify-items:center; max-width:900px; margin:0 auto; }
+    .team-card { max-width:380px; width:100%; text-align:center; }
+    .team-photo { width:100%; padding-top:100%; background-size:cover; background-position:center; border-radius:10px; margin-bottom:20px; box-shadow:0 4px 16px rgba(0,0,0,0.08); }
+    .team-card h3 { font-size:20px; font-weight:700; margin-bottom:6px; padding-bottom:14px; position:relative; display:inline-block; }
+    .team-card h3::after { content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:60px; height:3px; background:var(--main-color); }
+    .team-card p { font-size:15px; color:#555; line-height:1.7; margin-top:12px; }
+
+    /* CONTACT */
+    .contact-details { list-style:none; text-align:center; margin-bottom:16px; }
+    .contact-details li { margin-bottom:10px; font-size:18px; font-weight:600; }
+    .contact-details li a { color:var(--text-dark); }
+    .contact-details li a:hover { color:var(--main-color); text-decoration:underline; }
+    .contact-address { text-align:center; color:#666; margin-bottom:32px; font-size:15px; line-height:1.8; }
+    .contact-form { max-width:560px; margin:0 auto; }
+    .contact-form .form-group { margin-bottom:16px; }
+    .contact-form label { display:block; font-size:14px; font-weight:600; color:#555; margin-bottom:5px; }
+    .contact-form input, .contact-form textarea { width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:4px; font-size:15px; font-family:'Assistant',sans-serif; outline:none; transition:border-color 0.2s; }
+    .contact-form input:focus, .contact-form textarea:focus { border-color:var(--main-color); }
+    .contact-form textarea { resize:vertical; min-height:100px; }
+    .contact-form .req { color:var(--main-color); margin-right:2px; }
+    .contact-form button { width:100%; padding:12px; background:var(--main-color); color:#fff; border:none; border-radius:4px; font-size:16px; font-weight:700; cursor:pointer; font-family:'Assistant',sans-serif; transition:background 0.2s; }
+    .contact-form button:hover { background:var(--main-color-dark); }
+    .thank-you { display:none; text-align:center; padding:30px; color:var(--main-color); font-size:20px; font-weight:700; }
+
+    /* CTA */
+    .cta-block { text-align:center; padding:50px 20px; }
+    .cta-block h2 { font-size:22px; font-weight:700; margin-bottom:12px; }
+    .cta-block p { color:#666; margin-bottom:24px; }
+    .btn-primary { display:inline-block; background:var(--main-color); color:#fff; padding:12px 36px; border-radius:4px; font-size:16px; font-weight:700; text-decoration:none; transition:background 0.2s; }
+    .btn-primary:hover { background:var(--main-color-dark); color:#fff; text-decoration:none; }
+
+    /* FOOTER */
+    footer { background:var(--footer-bg); color:#fff; padding:30px 20px; }
+    .footer-inner { max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+    .footer-name { font-size:18px; font-weight:700; margin-bottom:4px; }
+    .footer-copy { font-size:13px; color:rgba(255,255,255,0.7); }
+    .footer-nav { list-style:none; display:flex; gap:16px; flex-wrap:wrap; }
+    .footer-nav li a { color:rgba(255,255,255,0.8); font-size:14px; text-decoration:none; }
+    .footer-nav li a:hover { color:#fff; text-decoration:underline; }
+
+    /* WHATSAPP */
+    .whatsapp-float { position:fixed; bottom:24px; left:24px; z-index:999; background:#25d366; color:#fff; width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(0,0,0,0.2); text-decoration:none; transition:transform 0.2s; }
+    .whatsapp-float:hover { transform:scale(1.1); color:#fff; text-decoration:none; }
+
+    /* RESPONSIVE */
+    @media (max-width:768px) {
+      .nav-pages { display:none; }
+      .mobile-menu-btn { display:block; }
+      .two-col { grid-template-columns:1fr; }
+      .two-col.img-left { direction:rtl; }
+      .page-banner h1 { font-size:26px; }
+    }
+</style>
+</head>
+<body>
+<nav id="mainNav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="https://images.cdn-files-a.com/uploads/5875523/400_63947ead6c28d.png" alt="גלים-גישור">
+      <span>גלים-גישור</span>
+    </a>
+    <ul class="nav-pages"><li><a href="index.html">בית</a></li>
+<li><a href="about-us.html">אודותינו</a></li>
+<li><a href="who-we-are.html">מי אנחנו</a></li>
+<li><a href="mediation.html">גישור</a></li>
+<li><a href="divorced-parents.html">הורים גרושים</a></li>
+<li class="active"><a href="children.html">ילדים בגירושים</a></li>
+<li><a href="chapter-b.html">פרק ב'</a></li>
+<li><a href="contact.html">צור קשר</a></li>
+</ul>
+    <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="תפריט">☰</button>
+  </div>
+</nav>
+<div id="mobileMenu"><ul><li><a href="index.html" onclick="toggleMenu()">בית</a></li>
+<li><a href="about-us.html" onclick="toggleMenu()">אודותינו</a></li>
+<li><a href="who-we-are.html" onclick="toggleMenu()">מי אנחנו</a></li>
+<li><a href="mediation.html" onclick="toggleMenu()">גישור</a></li>
+<li><a href="divorced-parents.html" onclick="toggleMenu()">הורים גרושים</a></li>
+<li class="active"><a href="children.html" onclick="toggleMenu()">ילדים בגירושים</a></li>
+<li><a href="chapter-b.html" onclick="toggleMenu()">פרק ב'</a></li>
+<li><a href="contact.html" onclick="toggleMenu()">צור קשר</a></li>
+</ul></div>
+
+<div class="breadcrumb"><a href="index.html">בית</a><span>›</span><span>ילדים בגירושים</span></div>
+
+<div class="page-banner"><h1>ילדים בגירושים</h1><hr></div>
+
+
+<section class="content-section">
+  <div class="container">
+    <div class="two-col">
+      <div class="col-img">
+        <img src="https://images.cdn-files-a.com/ready_uploads/media/5356799/400_5ef9eff58d36b.jpg" alt="ילדים בגירושים">
+      </div>
+      <div class="col-text content-text">
+        <p><strong>פרידת ההורים והקשיים בחודשים הראשונים</strong></p>
+        <p>ילדים להורים גרושים 'טריים' נדרשים להסתגל למצבים שמשתנים תכופות. הפרידה של ההורים היא תהליך מורכב שלעיתים קרובות מפר את תחושת הביטחון שרואים את משפחתם כיציבה ועמידה לשינויים.</p>
+        <p>כאשר ההורים, ולעיתים גם כאשר הילדים עצמם מבינים שהדבר הנכון הוא שההורים יתגרשו, הילדים עדיין יתקשו להסתגל למצב החדש. התנהלות בריאה ושקולה מצד ההורים בחודשים הראשונים שלאחר הפרידה, תחסוך מן הילדים קשיים רגשיים משמעותיים.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="content-section alt">
+  <div class="container">
+    <div class="content-text">
+      <p><strong>השפעת קונפליקטים בין הורים גרושים על ילדיהם</strong></p>
+      <p>בנוסף, יש להורים גרושים, גם אם התגרשו בצורה טובה, צרכים שונים שהם חווים באופן תדיר. צרכים אלה יוצרים מצב פרדוקסלי. מצד אחד, בני הזוג הגרושים, שרוצים להרגיש את נפרדותם נוטים להתנהל ולהחליט עצמאית לגבי סוגיות שונות, כל צד על פי הבנתו. מצד שני, הם עדיין הוריהם של ילדיהם, ולכן הם נדרשים פעמים רבות לשיתוף פעולה ברמה זו או אחרת, על מנת לתת מענה מותאם לצרכיהם של הילדים.</p>
+      <p>לכן, היעזרות במסגרת שנותנת מקום לבירור של הצרכים השונים, באופן רציף על פני תקופה משמעותית, תאפשר להורים הגרושים לתת לילדיהם את ההורות הטובה ביותר שהם יכולים להעניק בסיטואציות מורכבות אלה.</p>
+      <p><strong>טלטלות שעוברות על ילדים להורים גרושים</strong></p>
+      <p>ילדים להורים גרושים נדרשים להתאים את עצמם בהיבטים רבים. התאמות בהתארגנות המחודשת של התא המשפחתי, זכירת הציוד שעליהם לקחת בכל יום בהתאם לזמני השהות עם מי מההורים, מערכות יחסים אחרות שאולי נכנסות לחיי ההורים, ועוד....</p>
+      <p>לעיתים בתקופת הגירושים יש להורים יש פחות פנאי וזמן לשוחח עם ילדיהם. גם בתקופות של שגרה, ילדים שהוריהם התגרשו זה מכבר, זקוקים עדיין לשוחח עמם. לצערנו, לא תמיד הדבר מתאפשר, הן בשל אילוצי החיים האינטנסיביים בישראל, והן בשל האילוצים והאתגרים היומיומיים הניצבים בפני הורים גרושים וילדיהם.</p>
+      <p>לעיתים ירגישו ילדים חריגים ביחס לסביבה, לעיתים יחוו קשיים רגשיים כתוצאה מקונפליקט בין ההורים. התייחסות לקשיים האלה ולפיתוח מענים הולמים בעזרת טיפול פרטני או הדרכת הורים, רק יועילו לילדים וייטיבו עם התפתחותם.</p>
+    </div>
+  </div>
+</section>
+<div class="cta-block">
+  <h2>דאגים לילדיכם?</h2>
+  <p>אנחנו כאן כדי לסייע</p>
+  <a href="contact.html" class="btn-primary">צור קשר</a>
+</div>
+
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-name">גלים-גישור</div>
+      <div class="footer-copy">זכויות יוצרים © 2026 כל הזכויות שמורות</div>
+    </div>
+    <ul class="footer-nav">
+      <li><a href="index.html">בית</a></li>
+      <li><a href="about-us.html">אודותינו</a></li>
+      <li><a href="who-we-are.html">מי אנחנו</a></li>
+      <li><a href="mediation.html">גישור</a></li>
+      <li><a href="contact.html">צור קשר</a></li>
+    </ul>
+  </div>
+</footer>
+
+<a class="whatsapp-float" href="https://wa.me/972526244021" target="_blank" title="WhatsApp" aria-label="WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a>
+
+<script>
+  function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+  document.addEventListener('click', function(e) {
+    var menu = document.getElementById('mobileMenu');
+    var btn = document.querySelector('.mobile-menu-btn');
+    if (menu && menu.classList.contains('open') && !menu.contains(e.target) && btn && !btn.contains(e.target)) {
+      menu.classList.remove('open');
+    }
+  });
+  function submitForm(formId, thankId) {
+    var f = document.getElementById(formId);
+    if(f) f.addEventListener('submit', function(e) {
+      e.preventDefault();
+      f.style.display='none';
+      document.getElementById(thankId).style.display='block';
+    });
+  }
+  submitForm('mainContactForm','thankYou');
+</script>
+</body>
+</html>
