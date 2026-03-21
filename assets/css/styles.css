@@ -180,10 +180,13 @@ button, input, textarea { font: inherit; }
 }
 .hero h1{
   margin: 0 0 12px 0;
+  /* סגנון דומה ל־"Elegant" בסטוריז באינסטגרם (סריף אלגנטי; הגופן המקורי של IG לא זמין ל־web) */
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-weight: 400;
   font-size: clamp(44px, 6vw, 74px);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   line-height: 1.08;
-  text-shadow: 0 12px 30px rgba(0,0,0,0.35);
+  text-shadow: 0 8px 24px rgba(0,0,0,0.22);
 }
 .hero p{
   margin: 0 0 22px 0;

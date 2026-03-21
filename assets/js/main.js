@@ -1,8 +1,8 @@
 /* eslint-disable no-use-before-define */
 (() => {
   const STUDIO = {
-    name: "טלי בייקר",
-    tagline: "סטודיו בוטיק לעיצוב פנים • תכנון • ליווי • הלבשה",
+    name: "Tali Baker",
+    tagline: "סטודיו בוטיק לעיצוב פנים • תכנון • ליווי",
     instagramUrl: "",
     phone: "",
     email: "",
@@ -12,15 +12,52 @@
   // Drop real images into `assets/projects/<slug>/...` and update these paths.
   const PLACEHOLDER = "assets/images/placeholder.svg";
 
+  const BEIT_TIVON_DIR = "assets/images/beit-tivon";
+  /** קבצים מתיקיית בית בטבעון (שם התיקייה בדיסק: beit-tivon) */
+  const BEIT_TIVON_FILES = [
+    "_DSC7719 copy(1).JPG",
+    "_DSC7719 copy.JPG",
+    "_DSC7722 copy(1).JPG",
+    "_DSC7722 copy.JPG",
+    "_DSC7724 copy.JPG",
+    "_DSC7734 copy.JPG",
+    "_DSC7743 copy.JPG",
+    "_DSC7751 copy.JPG",
+    "_DSC7762 copy(1).JPG",
+    "_DSC7762 copy.JPG",
+    "_DSC7765 copy.JPG",
+    "_DSC7769 copy.JPG",
+    "_DSC7777 copy.JPG",
+    "_DSC7782 copy.JPG",
+    "_DSC7790 copy.JPG",
+    "_DSC7793 copy.JPG",
+    "_DSC7800 copy(1).jpg",
+    "_DSC7800 copy.JPG",
+    "_DSC7804 copy(1).JPG",
+    "_DSC7804 copy.JPG",
+    "_DSC7806 copy.JPG",
+    "_DSC7807 copy.JPG",
+    "_DSC7808 copy.JPG",
+    "_DSC7810 copy.JPG",
+    "_DSC7811 copy.JPG",
+    "_DSC7812 copy.JPG",
+    "_DSC7814 copy.JPG",
+    "_DSC7817 copy.JPG",
+    "_DSC7818 copy.JPG",
+    "_DSC7821 copy.JPG",
+  ];
+  const BEIT_TIVON_IMAGES = BEIT_TIVON_FILES.map(
+    (name) => `${BEIT_TIVON_DIR}/${encodeURIComponent(name)}`
+  );
+
   /** @type {Array<{id:string,title:string,subtitle?:string,tags:string[],cover:string,images:string[]}>} */
   const PROJECTS = [
     {
       id: "farmhouseModern",
-      title: "בית חווה מודרני",
-      subtitle: "סלון • מטבח • פינת אוכל",
+      title: "פרויקט בטבעון",
       tags: ["בתים"],
-      cover: PLACEHOLDER,
-      images: [PLACEHOLDER, PLACEHOLDER, PLACEHOLDER, PLACEHOLDER],
+      cover: BEIT_TIVON_IMAGES[0],
+      images: BEIT_TIVON_IMAGES,
     },
     {
       id: "urbanPenthouse",
@@ -198,11 +235,14 @@
       card.setAttribute("role", "button");
       card.setAttribute("aria-label", `פתח גלריה: ${p.title}`);
       card.dataset.projectId = p.id;
+      const subtitleLine = p.subtitle
+        ? `<span>${escapeHtml(p.subtitle)}</span>`
+        : "";
       card.innerHTML = `
         <img src="${escapeAttr(p.cover)}" alt="${escapeAttr(p.title)}" loading="lazy">
         <div class="card-meta">
           <strong>${escapeHtml(p.title)}</strong>
-          <span>${escapeHtml(p.subtitle || "")}</span>
+          ${subtitleLine}
         </div>
       `;
 
