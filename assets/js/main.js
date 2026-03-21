@@ -13,42 +13,40 @@
   const PLACEHOLDER = "assets/images/placeholder.svg";
 
   const BEIT_TIVON_DIR = "assets/images/beit-tivon";
-  /** קבצים מתיקיית בית בטבעון (שם התיקייה בדיסק: beit-tivon) */
+  /** תמונות בית בטבעון — שמות פשוטים לתאימות אחסון סטטי */
   const BEIT_TIVON_FILES = [
-    "_DSC7719 copy(1).JPG",
-    "_DSC7719 copy.JPG",
-    "_DSC7722 copy(1).JPG",
-    "_DSC7722 copy.JPG",
-    "_DSC7724 copy.JPG",
-    "_DSC7734 copy.JPG",
-    "_DSC7743 copy.JPG",
-    "_DSC7751 copy.JPG",
-    "_DSC7762 copy(1).JPG",
-    "_DSC7762 copy.JPG",
-    "_DSC7765 copy.JPG",
-    "_DSC7769 copy.JPG",
-    "_DSC7777 copy.JPG",
-    "_DSC7782 copy.JPG",
-    "_DSC7790 copy.JPG",
-    "_DSC7793 copy.JPG",
-    "_DSC7800 copy(1).jpg",
-    "_DSC7800 copy.JPG",
-    "_DSC7804 copy(1).JPG",
-    "_DSC7804 copy.JPG",
-    "_DSC7806 copy.JPG",
-    "_DSC7807 copy.JPG",
-    "_DSC7808 copy.JPG",
-    "_DSC7810 copy.JPG",
-    "_DSC7811 copy.JPG",
-    "_DSC7812 copy.JPG",
-    "_DSC7814 copy.JPG",
-    "_DSC7817 copy.JPG",
-    "_DSC7818 copy.JPG",
-    "_DSC7821 copy.JPG",
+    "beit-tivon_1.JPG",
+    "beit-tivon_2.JPG",
+    "beit-tivon_3.JPG",
+    "beit-tivon_4.JPG",
+    "beit-tivon_5.JPG",
+    "beit-tivon_6.JPG",
+    "beit-tivon_7.JPG",
+    "beit-tivon_8.JPG",
+    "beit-tivon_9.JPG",
+    "beit-tivon_10.JPG",
+    "beit-tivon_11.JPG",
+    "beit-tivon_12.JPG",
+    "beit-tivon_13.JPG",
+    "beit-tivon_14.JPG",
+    "beit-tivon_15.JPG",
+    "beit-tivon_16.JPG",
+    "beit-tivon_17.jpg",
+    "beit-tivon_18.JPG",
+    "beit-tivon_19.JPG",
+    "beit-tivon_20.JPG",
+    "beit-tivon_21.JPG",
+    "beit-tivon_22.JPG",
+    "beit-tivon_23.JPG",
+    "beit-tivon_24.JPG",
+    "beit-tivon_25.JPG",
+    "beit-tivon_26.JPG",
+    "beit-tivon_27.JPG",
+    "beit-tivon_28.JPG",
+    "beit-tivon_29.JPG",
+    "beit-tivon_30.JPG",
   ];
-  const BEIT_TIVON_IMAGES = BEIT_TIVON_FILES.map(
-    (name) => `${BEIT_TIVON_DIR}/${encodeURIComponent(name)}`
-  );
+  const BEIT_TIVON_IMAGES = BEIT_TIVON_FILES.map((name) => `${BEIT_TIVON_DIR}/${name}`);
 
   /** @type {Array<{id:string,title:string,subtitle?:string,tags:string[],cover:string,images:string[]}>} */
   const PROJECTS = [
