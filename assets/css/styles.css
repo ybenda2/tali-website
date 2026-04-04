@@ -320,13 +320,71 @@ section{
 .projects{
   background: #fff;
 }
-/* פס פרויקטים — כל פרויקט פעם אחת, גלילה אופקית (בלי שכפול DOM למרקיז) */
 .projects-strip-outer{
   width: 100%;
   margin-inline: calc(50% - 50vw);
   padding-inline-start: max(var(--pad), env(safe-area-inset-inline-start, 0px));
   padding-inline-end: max(var(--pad), env(safe-area-inset-inline-end, 0px));
   box-sizing: border-box;
+}
+/* קרוסלה: LTR על המעטפת — ב־RTL גוף העמוד, overflow-x מיישר את התוכן ל״התחלה״ הלוגית
+   ונוצר רווח ריק מצד אחד במקום הזרמה רציפה מהצד הנכון */
+.projects-strip-outer:has(.projects-carousel-viewport:not(.projects-carousel-viewport--static)){
+  direction: ltr;
+}
+/* מעטפת קרוסלה — אנימציית transform (אמינה); גלילה ידנית רק במעבר עכבר / פוקוס / מגע */
+.projects-carousel-viewport{
+  overflow-x: hidden;
+  overflow-y: hidden;
+  padding-block: 6px 16px;
+}
+.projects-carousel-viewport:not(.projects-carousel-viewport--static){
+  direction: ltr;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.25) transparent;
+}
+.projects-carousel-viewport:not(.projects-carousel-viewport--static):hover,
+.projects-carousel-viewport:not(.projects-carousel-viewport--static):focus-within,
+.projects-carousel-viewport:not(.projects-carousel-viewport--static).marquee-touching{
+  overflow-x: auto;
+}
+.projects-marquee-track{
+  --projects-marquee-duration: 72s;
+  --projects-marquee-shift: 0px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 0;
+  direction: ltr;
+  width: max-content;
+  will-change: transform;
+  animation: projects-marquee-transform var(--projects-marquee-duration) linear infinite;
+}
+.projects-carousel-viewport:hover .projects-marquee-track,
+.projects-carousel-viewport:focus-within .projects-marquee-track,
+.projects-carousel-viewport.marquee-touching .projects-marquee-track{
+  animation-play-state: paused;
+}
+.projects-strip-set{
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: nowrap;
+  gap: 14px;
+  direction: ltr;
+  flex: 0 0 auto;
+}
+/* טקסט בעברית בתוך כרטיס — בלי direction:rtl על כל הפס (שובר יישור overflow בקרוסלה) */
+.projects-strip-set .card{
+  direction: rtl;
+}
+/* מצב ללא אנימציה (העדפת המשתמש) — כמו פס הגלילה הקודם */
+.projects-carousel-viewport--static{
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.25) transparent;
 }
 .projects-strip{
   display: flex;
@@ -338,23 +396,29 @@ section{
   overflow-y: hidden;
   scroll-snap-type: inline mandatory;
   scroll-padding-inline: var(--pad);
-  padding-block: 6px 16px;
+  padding-block: 0;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: rgba(0,0,0,0.25) transparent;
 }
-.projects-strip:focus-visible{
+.projects-strip:focus-visible,
+.projects-carousel-viewport:focus-visible{
   outline: 3px solid rgba(0,0,0,0.35);
   outline-offset: 2px;
 }
-.projects-strip::-webkit-scrollbar{
+.projects-strip::-webkit-scrollbar,
+.projects-carousel-viewport--static::-webkit-scrollbar,
+.projects-carousel-viewport:not(.projects-carousel-viewport--static)::-webkit-scrollbar{
   height: 8px;
 }
-.projects-strip::-webkit-scrollbar-thumb{
+.projects-strip::-webkit-scrollbar-thumb,
+.projects-carousel-viewport--static::-webkit-scrollbar-thumb,
+.projects-carousel-viewport:not(.projects-carousel-viewport--static)::-webkit-scrollbar-thumb{
   background: rgba(0,0,0,0.22);
   border-radius: 999px;
 }
-.projects-strip .card{
+.projects-strip .card,
+.projects-strip-set .card{
   flex: 0 0 auto;
   grid-column: unset;
   width: min(78vw, 420px);
@@ -363,18 +427,31 @@ section{
   scroll-snap-align: start;
 }
 @media (min-width: 981px){
-  .projects-strip .card{
+  .projects-strip .card,
+  .projects-strip-set .card{
     width: min(38vw, 480px);
   }
 }
 @media (max-width: 720px){
-  .projects-strip{
+  .projects-strip,
+  .projects-strip-set{
     gap: 12px;
+  }
+  .projects-carousel-viewport{
     padding-block: 4px 12px;
   }
-  .projects-strip .card{
+  .projects-strip .card,
+  .projects-strip-set .card{
     width: min(84vw, 380px);
     aspect-ratio: 3 / 4;
+  }
+}
+@keyframes projects-marquee-transform{
+  from{
+    transform: translate3d(0, 0, 0);
+  }
+  to{
+    transform: translate3d(calc(-1 * var(--projects-marquee-shift)), 0, 0);
   }
 }
 

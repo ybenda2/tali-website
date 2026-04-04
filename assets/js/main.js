@@ -182,24 +182,146 @@
     }
   }
 
+  const prefersReducedMotion =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  let marqueeResizeCleanup = null;
+  let marqueeScrollCleanup = null;
+
+  function marqueeLoopPeriod(track) {
+    const first = track.querySelector(".projects-strip-set");
+    if (!first) return 0;
+    const w = first.offsetWidth;
+    return w >= 2 ? w : 0;
+  }
+
+  function wrapMarqueeScroll(viewport, track) {
+    const period = marqueeLoopPeriod(track);
+    if (period < 2) return;
+    while (viewport.scrollLeft >= period) viewport.scrollLeft -= period;
+    while (viewport.scrollLeft < 0) viewport.scrollLeft += period;
+  }
+
+  function applyMarqueeMetrics(track) {
+    const period = marqueeLoopPeriod(track);
+    if (period < 2) return;
+    const sec = Math.max(48, Math.min(140, period / 22));
+    track.style.setProperty("--projects-marquee-shift", `${period}px`);
+    track.style.setProperty("--projects-marquee-duration", `${sec}s`);
+  }
+
+  function bindMarqueeResize(viewport, track) {
+    if (marqueeResizeCleanup) {
+      marqueeResizeCleanup();
+      marqueeResizeCleanup = null;
+    }
+    if (!track || !viewport || prefersReducedMotion) return;
+    const onLayout = () => applyMarqueeMetrics(track);
+    if (typeof ResizeObserver !== "undefined") {
+      const ro = new ResizeObserver(onLayout);
+      ro.observe(track);
+      marqueeResizeCleanup = () => ro.disconnect();
+    } else {
+      window.addEventListener("resize", onLayout, { passive: true });
+      marqueeResizeCleanup = () => window.removeEventListener("resize", onLayout);
+    }
+  }
+
+  function stopMarqueeUi() {
+    if (marqueeScrollCleanup) {
+      marqueeScrollCleanup();
+      marqueeScrollCleanup = null;
+    }
+  }
+
+  /* מגע, גלילה בזמן עצירה, ואיפוס scroll כשחוזרים לאנימציה */
+  function bindMarqueeUi(viewport, track) {
+    stopMarqueeUi();
+    if (!viewport || !track || prefersReducedMotion) return;
+
+    let touchTimer = 0;
+
+    const onScroll = () => {
+      wrapMarqueeScroll(viewport, track);
+    };
+
+    const resetScroll = () => {
+      viewport.scrollLeft = 0;
+    };
+
+    const onTouchStart = () => {
+      viewport.classList.add("marquee-touching");
+      window.clearTimeout(touchTimer);
+    };
+
+    const onTouchEnd = () => {
+      window.clearTimeout(touchTimer);
+      touchTimer = window.setTimeout(() => {
+        viewport.classList.remove("marquee-touching");
+        resetScroll();
+      }, 450);
+    };
+
+    const onMouseLeave = () => {
+      resetScroll();
+    };
+
+    const onFocusOut = () => {
+      window.requestAnimationFrame(() => {
+        if (!viewport.matches(":focus-within")) resetScroll();
+      });
+    };
+
+    viewport.addEventListener("scroll", onScroll, { passive: true });
+    viewport.addEventListener("touchstart", onTouchStart, { passive: true });
+    viewport.addEventListener("touchend", onTouchEnd, { passive: true });
+    viewport.addEventListener("touchcancel", onTouchEnd, { passive: true });
+    viewport.addEventListener("mouseleave", onMouseLeave, { passive: true });
+    viewport.addEventListener("focusout", onFocusOut, { capture: true });
+
+    marqueeScrollCleanup = () => {
+      window.clearTimeout(touchTimer);
+      viewport.classList.remove("marquee-touching");
+      viewport.removeEventListener("scroll", onScroll);
+      viewport.removeEventListener("touchstart", onTouchStart);
+      viewport.removeEventListener("touchend", onTouchEnd);
+      viewport.removeEventListener("touchcancel", onTouchEnd);
+      viewport.removeEventListener("mouseleave", onMouseLeave);
+      viewport.removeEventListener("focusout", onFocusOut, { capture: true });
+    };
+  }
+
   function renderProjects(tag) {
     const grid = $("#projectsGrid");
+    const viewport = grid?.closest(".projects-carousel-viewport");
     const list = tag === "הכל" ? PROJECTS : PROJECTS.filter((p) => p.tags.includes(tag));
+
+    stopMarqueeUi();
+    if (marqueeResizeCleanup) {
+      marqueeResizeCleanup();
+      marqueeResizeCleanup = null;
+    }
+
     grid.innerHTML = "";
 
     if (list.length === 0) {
       $("#projectsCount").textContent = "0 פרויקטים";
+      if (viewport) viewport.classList.remove("projects-carousel-viewport--static");
       return;
     }
 
-    function makeCard(p) {
+    function makeCard(p, eagerImages) {
       const card = document.createElement("a");
       card.className = "card";
       card.href = `project.html?id=${encodeURIComponent(p.id)}`;
       card.setAttribute("aria-label", `צפייה בפרויקט: ${p.title}`);
       const subtitleLine = p.subtitle ? `<span>${escapeHtml(p.subtitle)}</span>` : "";
+      const imgAttrs = eagerImages
+        ? `src="${escapeAttr(p.cover)}" alt="${escapeAttr(p.title)}" loading="eager" decoding="async"`
+        : `src="${escapeAttr(p.cover)}" alt="${escapeAttr(p.title)}" loading="lazy"`;
       card.innerHTML = `
-        <img src="${escapeAttr(p.cover)}" alt="${escapeAttr(p.title)}" loading="lazy">
+        <img ${imgAttrs}>
         <div class="card-meta">
           <strong>${escapeHtml(p.title)}</strong>
           ${subtitleLine}
@@ -208,7 +330,47 @@
       return card;
     }
 
-    for (const p of list) grid.appendChild(makeCard(p));
+    if (prefersReducedMotion) {
+      if (viewport) {
+        viewport.classList.add("projects-carousel-viewport--static");
+        viewport.setAttribute("aria-label", "גלריית פרויקטים — גלילה אופקית");
+      }
+      grid.className = "projects-strip";
+      for (const p of list) grid.appendChild(makeCard(p));
+    } else {
+      if (viewport) {
+        viewport.classList.remove("projects-carousel-viewport--static");
+        viewport.setAttribute(
+          "aria-label",
+          "גלריית פרויקטים — גלילה איטית; נעצרת מעל האזור כדי לאפשר גלילה ידנית"
+        );
+      }
+      grid.className = "projects-marquee-track";
+
+      const setA = document.createElement("div");
+      setA.className = "projects-strip-set";
+      for (const p of list) setA.appendChild(makeCard(p, true));
+
+      const setB = document.createElement("div");
+      setB.className = "projects-strip-set";
+      setB.setAttribute("aria-hidden", "true");
+      for (const cardEl of setA.children) {
+        const dup = cardEl.cloneNode(true);
+        dup.setAttribute("tabindex", "-1");
+        setB.appendChild(dup);
+      }
+
+      grid.appendChild(setA);
+      grid.appendChild(setB);
+
+      requestAnimationFrame(() => {
+        applyMarqueeMetrics(grid);
+        requestAnimationFrame(() => applyMarqueeMetrics(grid));
+        bindMarqueeResize(viewport, grid);
+        bindMarqueeUi(viewport, grid);
+      });
+      window.addEventListener("load", () => applyMarqueeMetrics(grid), { once: true });
+    }
 
     $("#projectsCount").textContent = `${list.length} פרויקטים`;
   }
