@@ -1,0 +1,27 @@
+#!/bin/sh
+# Re-compress JPEGs under assets/images/ when any such file is staged.
+set -e
+
+root=$(git rev-parse --show-toplevel)
+cd "$root" || exit 1
+
+if ! git diff --cached --name-only --diff-filter=ACMR | grep -qiE '^assets/images/.*\.(jpe?g)$'; then
+  exit 0
+fi
+
+if [ "$(uname -s)" != "Darwin" ]; then
+  echo "pre-commit: skipping JPEG compression (requires macOS sips)" >&2
+  exit 0
+fi
+
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "pre-commit: python3 not found; install Python 3 or run scripts/compress_images.py manually" >&2
+  exit 1
+fi
+
+python3 scripts/compress_images.py
+
+# Script may touch every JPEG in the tree; refresh the index for all of them.
+find assets/images -type f \( -iname '*.jpg' -o -iname '*.jpeg' \) -exec git add -- {} +
+
+exit 0
