@@ -1,105 +1,11 @@
 /* eslint-disable no-use-before-define */
 (() => {
-  const STUDIO = {
-    name: "Tali Baker",
-    tagline: "סטודיו בוטיק לעיצוב פנים • תכנון • ליווי",
-    instagramUrl: "",
-    phone: "",
-    email: "",
-    addressLines: ["ישראל"],
-  };
+  const STUDIO = window.TALI.studio;
+  const PLACEHOLDER = window.TALI.placeholder;
+  const PROJECTS = window.TALI.projects;
+  const { hydrateStudio, initMenu, initYear, escapeHtml } = window.TALI_CHROME;
 
-  // Drop real images into `assets/projects/<slug>/...` and update these paths.
-  const PLACEHOLDER = "assets/images/placeholder.svg";
-
-  const BEIT_TIVON_DIR = "assets/images/beit-tivon";
-  /** תמונות בית בטבעון — שמות פשוטים לתאימות אחסון סטטי */
-  const BEIT_TIVON_FILES = [
-    "beit-tivon_1.JPG",
-    "beit-tivon_2.JPG",
-    "beit-tivon_3.JPG",
-    "beit-tivon_4.JPG",
-    "beit-tivon_5.JPG",
-    "beit-tivon_6.JPG",
-    "beit-tivon_7.JPG",
-    "beit-tivon_8.JPG",
-    "beit-tivon_9.JPG",
-    "beit-tivon_10.JPG",
-    "beit-tivon_11.JPG",
-    "beit-tivon_12.JPG",
-    "beit-tivon_13.JPG",
-    "beit-tivon_14.JPG",
-    "beit-tivon_15.JPG",
-    "beit-tivon_16.JPG",
-    "beit-tivon_17.jpg",
-    "beit-tivon_18.JPG",
-    "beit-tivon_19.JPG",
-    "beit-tivon_20.JPG",
-    "beit-tivon_21.JPG",
-    "beit-tivon_22.JPG",
-    "beit-tivon_23.JPG",
-    "beit-tivon_24.JPG",
-    "beit-tivon_25.JPG",
-    "beit-tivon_26.JPG",
-    "beit-tivon_27.JPG",
-    "beit-tivon_28.JPG",
-    "beit-tivon_29.JPG",
-    "beit-tivon_30.JPG",
-  ];
-  const BEIT_TIVON_IMAGES = BEIT_TIVON_FILES.map((name) => `${BEIT_TIVON_DIR}/${name}`);
-
-  /** @type {Array<{id:string,title:string,subtitle?:string,tags:string[],cover:string,images:string[]}>} */
-  const PROJECTS = [
-    {
-      id: "farmhouseModern",
-      title: "פרויקט בטבעון",
-      tags: ["בתים"],
-      cover: BEIT_TIVON_IMAGES[0],
-      images: BEIT_TIVON_IMAGES,
-    },
-    {
-      id: "urbanPenthouse",
-      title: "פנטהאוז אורבני",
-      subtitle: "חומריות טבעית • קווים נקיים",
-      tags: ["דירות"],
-      cover: PLACEHOLDER,
-      images: [PLACEHOLDER, PLACEHOLDER, PLACEHOLDER],
-    },
-    {
-      id: "seaViewApartment",
-      title: "דירה מול הים",
-      subtitle: "אור • רכות • פרופורציות",
-      tags: ["דירות"],
-      cover: PLACEHOLDER,
-      images: [PLACEHOLDER, PLACEHOLDER, PLACEHOLDER],
-    },
-    {
-      id: "jerusalemCalm",
-      title: "שלווה ירושלמית",
-      subtitle: "גוונים חמים • נגרות בהתאמה",
-      tags: ["בתים"],
-      cover: PLACEHOLDER,
-      images: [PLACEHOLDER, PLACEHOLDER, PLACEHOLDER],
-    },
-    {
-      id: "industrialChicOffice",
-      title: "שיק מתועש (משרדים)",
-      subtitle: "חלל עבודה • פרקטיות • אופי",
-      tags: ["מסחרי"],
-      cover: PLACEHOLDER,
-      images: [PLACEHOLDER, PLACEHOLDER, PLACEHOLDER],
-    },
-    {
-      id: "classicContemporary",
-      title: "קלאסיקה עכשווית",
-      subtitle: "שכבות • טקסטיל • איזון",
-      tags: ["בתים"],
-      cover: PLACEHOLDER,
-      images: [PLACEHOLDER, PLACEHOLDER, PLACEHOLDER],
-    },
-  ];
-
-  const TAGS = ["הכל", "דירות", "בתים", "מסחרי"];
+  const TAGS = ["הכל", "דירות", "בתים"];
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -110,66 +16,121 @@
     initActiveNav();
     initFilters();
     renderProjects("הכל");
-    initLightbox();
     initContactForm();
     initYear();
+    initHeroSlideshow();
   }
 
-  function hydrateStudio() {
-    $("[data-studio-name]").textContent = STUDIO.name;
-    $("[data-studio-tagline]").textContent = STUDIO.tagline;
+  const HERO_DEFAULT_ALT = "חלל מגורים ומטבח בעיצוב בוטיק מודרני";
+  const HERO_DEFAULT_URL = "assets/images/hero-interior.png";
 
-    const ig = $("[data-instagram]");
-    if (STUDIO.instagramUrl) {
-      ig.href = STUDIO.instagramUrl;
-      ig.style.display = "";
-    } else {
-      ig.style.display = "none";
+  function buildHeroSlides() {
+    const list = [];
+    const seen = new Set();
+    for (const p of PROJECTS) {
+      if (!p.cover || p.cover === PLACEHOLDER) continue;
+      if (seen.has(p.cover)) continue;
+      seen.add(p.cover);
+      list.push({ url: p.cover, alt: `צילום מהפרויקט: ${p.title}` });
     }
-
-    const phone = $("[data-phone]");
-    const email = $("[data-email]");
-    const addr = $("[data-address]");
-
-    if (STUDIO.phone) {
-      phone.textContent = STUDIO.phone;
-      phone.href = `tel:${STUDIO.phone.replace(/\s+/g, "")}`;
-    } else {
-      phone.closest("li").style.display = "none";
-    }
-
-    if (STUDIO.email) {
-      email.textContent = STUDIO.email;
-      email.href = `mailto:${STUDIO.email}`;
-    } else {
-      email.closest("li").style.display = "none";
-    }
-
-    addr.innerHTML = STUDIO.addressLines.map((l) => escapeHtml(l)).join("<br>");
+    const heroEntry = { url: HERO_DEFAULT_URL, alt: HERO_DEFAULT_ALT };
+    const sequence = list.length ? [heroEntry, ...list] : [heroEntry];
+    if (sequence.length < 2 && list.length === 1) sequence.push(list[0]);
+    return sequence;
   }
 
-  function initMenu() {
-    const btn = $("#menuBtn");
-    const drawer = $("#drawer");
+  function heroWhenDecoded(img, fn) {
+    if (img.decode) {
+      img
+        .decode()
+        .then(fn)
+        .catch(fn);
+    } else if (img.complete && img.naturalWidth) fn();
+    else img.addEventListener("load", fn, { once: true });
+  }
 
-    btn.addEventListener("click", () => {
-      const open = drawer.classList.toggle("open");
-      btn.setAttribute("aria-expanded", String(open));
-    });
+  function initHeroSlideshow() {
+    const root = document.querySelector(".hero-slides");
+    if (!root) return;
+    const imgs = Array.from(root.querySelectorAll(".hero-slide"));
+    if (imgs.length < 2) return;
 
-    drawer.addEventListener("click", (e) => {
-      const a = e.target.closest("a");
-      if (!a) return;
-      drawer.classList.remove("open");
-      btn.setAttribute("aria-expanded", "false");
-    });
+    const sequence = buildHeroSlides();
+    if (sequence.length < 2) {
+      imgs[0].src = sequence[0].url;
+      imgs[0].alt = sequence[0].alt;
+      imgs[0].classList.add("is-active");
+      imgs[1].remove();
+      return;
+    }
 
-    document.addEventListener("click", (e) => {
-      if (!drawer.classList.contains("open")) return;
-      if (drawer.contains(e.target) || btn.contains(e.target)) return;
-      drawer.classList.remove("open");
-      btn.setAttribute("aria-expanded", "false");
-    });
+    const prefersReduced =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    for (const s of sequence) {
+      const pre = new Image();
+      pre.src = s.url;
+    }
+
+    let visible = 0;
+    const activeAlt = () => sequence[visible].alt;
+
+    function applyAlts() {
+      imgs.forEach((im, i) => {
+        const on = im.classList.contains("is-active");
+        im.alt = on ? activeAlt() : "";
+      });
+    }
+
+    imgs[0].src = sequence[0].url;
+    imgs[1].src = sequence[1 % sequence.length].url;
+    imgs[0].classList.add("is-active");
+    imgs[1].classList.remove("is-active");
+    applyAlts();
+
+    if (prefersReduced) return;
+
+    let timer = 0;
+    let locked = false;
+    /* זמן תצוגה בין מעברים — ארוך מהדהייה כדי שהקרוסלה תרגיש רגועה ולא בולטת */
+    const intervalMs = 4800;
+
+    function clearTimer() {
+      if (timer) window.clearInterval(timer);
+      timer = 0;
+    }
+
+    function step() {
+      if (locked) return;
+      const nextIdx = (visible + 1) % sequence.length;
+      const inactive = imgs.find((im) => !im.classList.contains("is-active"));
+      if (!inactive) return;
+
+      const show = () => {
+        imgs.forEach((im) => im.classList.toggle("is-active", im === inactive));
+        visible = nextIdx;
+        applyAlts();
+        locked = false;
+      };
+
+      locked = true;
+      inactive.src = sequence[nextIdx].url;
+      heroWhenDecoded(inactive, show);
+    }
+
+    function start() {
+      clearTimer();
+      timer = window.setInterval(step, intervalMs);
+    }
+
+    function onVisibility() {
+      if (document.hidden) clearTimer();
+      else start();
+    }
+
+    start();
+    document.addEventListener("visibilitychange", onVisibility, { passive: true });
   }
 
   function initActiveNav() {
@@ -226,16 +187,17 @@
     const list = tag === "הכל" ? PROJECTS : PROJECTS.filter((p) => p.tags.includes(tag));
     grid.innerHTML = "";
 
-    for (const p of list) {
-      const card = document.createElement("article");
+    if (list.length === 0) {
+      $("#projectsCount").textContent = "0 פרויקטים";
+      return;
+    }
+
+    function makeCard(p) {
+      const card = document.createElement("a");
       card.className = "card";
-      card.tabIndex = 0;
-      card.setAttribute("role", "button");
-      card.setAttribute("aria-label", `פתח גלריה: ${p.title}`);
-      card.dataset.projectId = p.id;
-      const subtitleLine = p.subtitle
-        ? `<span>${escapeHtml(p.subtitle)}</span>`
-        : "";
+      card.href = `project.html?id=${encodeURIComponent(p.id)}`;
+      card.setAttribute("aria-label", `צפייה בפרויקט: ${p.title}`);
+      const subtitleLine = p.subtitle ? `<span>${escapeHtml(p.subtitle)}</span>` : "";
       card.innerHTML = `
         <img src="${escapeAttr(p.cover)}" alt="${escapeAttr(p.title)}" loading="lazy">
         <div class="card-meta">
@@ -243,130 +205,12 @@
           ${subtitleLine}
         </div>
       `;
-
-      card.addEventListener("click", () => openLightbox(p.id));
-      card.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          openLightbox(p.id);
-        }
-      });
-
-      grid.appendChild(card);
+      return card;
     }
 
+    for (const p of list) grid.appendChild(makeCard(p));
+
     $("#projectsCount").textContent = `${list.length} פרויקטים`;
-  }
-
-  // Lightbox
-  let lbState = {
-    projectId: "",
-    index: 0,
-    lastFocus: null,
-  };
-
-  function initLightbox() {
-    const overlay = $("#lightbox");
-    const closeBtn = $("#lbClose");
-    const prevBtn = $("#lbPrev");
-    const nextBtn = $("#lbNext");
-
-    closeBtn.addEventListener("click", closeLightbox);
-    prevBtn.addEventListener("click", () => move(-1));
-    nextBtn.addEventListener("click", () => move(1));
-
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) closeLightbox();
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (!overlay.classList.contains("open")) return;
-      if (e.key === "Escape") closeLightbox();
-      if (e.key === "ArrowLeft") move(1);
-      if (e.key === "ArrowRight") move(-1);
-      if (e.key === "Tab") trapFocus(e, overlay);
-    });
-  }
-
-  function openLightbox(projectId) {
-    const project = PROJECTS.find((p) => p.id === projectId);
-    if (!project) return;
-
-    lbState.projectId = projectId;
-    lbState.index = 0;
-    lbState.lastFocus = document.activeElement;
-
-    const overlay = $("#lightbox");
-    overlay.classList.add("open");
-    overlay.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-
-    $("#lbProjectTitle").textContent = project.title;
-    $("#lbProjectMeta").textContent = `${project.images.length} תמונות`;
-
-    renderThumbs(project);
-    renderStage(project);
-
-    // focus close by default
-    $("#lbClose").focus();
-  }
-
-  function closeLightbox() {
-    const overlay = $("#lightbox");
-    if (!overlay.classList.contains("open")) return;
-
-    overlay.classList.remove("open");
-    overlay.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-
-    const last = lbState.lastFocus;
-    lbState = { projectId: "", index: 0, lastFocus: null };
-    if (last && typeof last.focus === "function") last.focus();
-  }
-
-  function move(delta) {
-    const project = PROJECTS.find((p) => p.id === lbState.projectId);
-    if (!project) return;
-
-    const n = project.images.length;
-    lbState.index = (lbState.index + delta + n) % n;
-    renderStage(project);
-    syncThumbs();
-  }
-
-  function renderStage(project) {
-    const img = $("#lbImage");
-    const src = project.images[lbState.index];
-    img.src = src;
-    img.alt = project.title;
-    $("#lbProjectMeta").textContent = `תמונה ${lbState.index + 1} מתוך ${project.images.length}`;
-  }
-
-  function renderThumbs(project) {
-    const wrap = $("#lbThumbs");
-    wrap.innerHTML = "";
-
-    project.images.forEach((src, i) => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.setAttribute("aria-label", `תמונה ${i + 1}`);
-      b.setAttribute("aria-current", i === lbState.index ? "true" : "false");
-      b.innerHTML = `<img src="${escapeAttr(src)}" alt="" loading="lazy">`;
-      b.addEventListener("click", () => {
-        lbState.index = i;
-        renderStage(project);
-        syncThumbs();
-      });
-      wrap.appendChild(b);
-    });
-  }
-
-  function syncThumbs() {
-    const wrap = $("#lbThumbs");
-    const btns = $$("button", wrap);
-    btns.forEach((b, i) => b.setAttribute("aria-current", i === lbState.index ? "true" : "false"));
-    const active = btns[lbState.index];
-    if (active) active.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
   }
 
   function initContactForm() {
@@ -379,11 +223,15 @@
       const name = $("#fName").value.trim();
       const phone = $("#fPhone").value.trim();
       const email = $("#fEmail").value.trim();
+      const subject = $("#fSubject").value.trim();
+      const loc = $("#fLocation").value.trim();
       const msg = $("#fMsg").value.trim();
       return [
         `שם: ${name || "-"}`,
         `טלפון: ${phone || "-"}`,
         `אימייל: ${email || "-"}`,
+        `נושא: ${subject || "-"}`,
+        `מיקום / פרויקט: ${loc || "-"}`,
         "",
         msg || "-",
       ].join("\n");
@@ -391,7 +239,9 @@
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      toastMsg("טיפ: באתר סטטי לחלוטין אין שליחה אוטומטית. אפשר להעתיק הודעה או לפתוח מייל.");
+      toastMsg(
+        "האתר סטטי — אין שליחה אוטומטית. השתמשו ב״העתקה ללוח״ או ב״פתיחת מייל״ כדי לשלוח את הטופס."
+      );
     });
 
     copyBtn.addEventListener("click", async () => {
@@ -405,7 +255,9 @@
     });
 
     mailBtn.addEventListener("click", () => {
-      const subject = encodeURIComponent(`פנייה מהאתר — ${STUDIO.name}`);
+      const sub =
+        $("#fSubject").value.trim() || `פנייה מהאתר — ${STUDIO.name}`;
+      const subject = encodeURIComponent(sub);
       const body = encodeURIComponent(buildMessage());
       const to = STUDIO.email || "";
       window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
@@ -419,12 +271,6 @@
     }
   }
 
-  function initYear() {
-    const el = $("[data-year]");
-    if (el) el.textContent = String(new Date().getFullYear());
-  }
-
-  // Helpers
   function throttle(fn, ms) {
     let t = 0;
     return () => {
@@ -435,39 +281,9 @@
     };
   }
 
-  function escapeHtml(s) {
-    return String(s)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
-
   function escapeAttr(s) {
     return escapeHtml(s).replaceAll("\n", " ");
   }
 
-  function trapFocus(e, root) {
-    const focusables = $$(
-      'button,[href],input,textarea,select,[tabindex]:not([tabindex="-1"])',
-      root
-    ).filter((el) => !el.hasAttribute("disabled") && el.getAttribute("aria-hidden") !== "true");
-    if (focusables.length === 0) return;
-
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-    const active = document.activeElement;
-
-    if (e.shiftKey && active === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && active === last) {
-      e.preventDefault();
-      first.focus();
-    }
-  }
-
   document.addEventListener("DOMContentLoaded", init);
 })();
-

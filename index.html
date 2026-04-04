@@ -23,7 +23,14 @@
     <header class="header" role="banner">
       <div class="container header-inner">
         <a class="brand" href="#top" aria-label="חזרה לראש העמוד">
-          <img src="assets/images/placeholder.svg" alt="" />
+          <img
+            class="brand-photo"
+            src="assets/images/Profile_picture_Tali.png"
+            alt=""
+            width="256"
+            height="254"
+            decoding="async"
+          />
           <div class="brand-title">
             <strong data-studio-name>Tali Baker</strong>
             <span>Interior Design Studio</span>
@@ -37,15 +44,49 @@
           <a class="nav-cta" href="#contact" aria-current="false">צרו קשר</a>
         </nav>
 
-        <button
-          id="menuBtn"
-          class="menu-btn"
-          type="button"
-          aria-label="פתח תפריט"
-          aria-expanded="false"
-        >
-          תפריט
-        </button>
+        <div class="header-end">
+          <nav class="header-socials" aria-label="רשתות חברתיות">
+            <a
+              class="nav-cta nav-cta--icon nav-cta--header-icon"
+              data-instagram
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="אינסטגרם (נפתח בחלון חדש)"
+            >
+              <svg class="social-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path
+                  fill="currentColor"
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 1-2.881 0 1.44 1.44 0 0 1 2.881 0z"
+                />
+              </svg>
+            </a>
+            <a
+              class="nav-cta nav-cta--icon nav-cta--header-icon"
+              data-facebook
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="פייסבוק (נפתח בחלון חדש)"
+            >
+              <svg class="social-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path
+                  fill="currentColor"
+                  d="M24 12.073C24 5.446 18.627 0 12 0S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                />
+              </svg>
+            </a>
+          </nav>
+          <button
+            id="menuBtn"
+            class="menu-btn"
+            type="button"
+            aria-label="פתח תפריט"
+            aria-expanded="false"
+          >
+            תפריט
+          </button>
+        </div>
       </div>
     </header>
 
@@ -61,13 +102,25 @@
     <main id="top">
       <section class="hero" aria-label="פתיח">
         <div class="hero-media">
-          <img
-            src="assets/images/hero-interior.png"
-            alt="חלל מגורים ומטבח בעיצוב בוטיק מודרני"
-            width="1024"
-            height="682"
-            fetchpriority="high"
-          />
+          <div class="hero-slides">
+            <img
+              class="hero-slide is-active"
+              src="assets/images/hero-interior.png"
+              alt="חלל מגורים ומטבח בעיצוב בוטיק מודרני"
+              width="1024"
+              height="682"
+              fetchpriority="high"
+              decoding="async"
+            />
+            <img
+              class="hero-slide"
+              src="assets/images/hero-interior.png"
+              alt=""
+              width="1024"
+              height="682"
+              decoding="async"
+            />
+          </div>
         </div>
         <div class="hero-overlay" aria-hidden="true"></div>
         <div class="container hero-content">
@@ -91,8 +144,15 @@
             </div>
             <div id="filters" class="filters" aria-label="סינון פרויקטים"></div>
           </div>
+        </div>
 
-          <div id="projectsGrid" class="grid" aria-label="גלריית פרויקטים"></div>
+        <div class="projects-strip-outer">
+          <div
+            id="projectsGrid"
+            class="projects-strip"
+            role="region"
+            aria-label="גלריית פרויקטים — גלילה אופקית"
+          ></div>
         </div>
       </section>
 
@@ -115,8 +175,15 @@
                 האחרון בשטח.
               </p>
             </div>
-            <div class="portrait" aria-hidden="true">
-              <img src="assets/images/placeholder.svg" alt="" />
+            <div class="portrait">
+              <img
+                src="assets/images/Profile_picture_Tali.png"
+                alt="טלי בייקר, מעצבת פנים"
+                width="256"
+                height="254"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           </div>
         </div>
@@ -127,86 +194,129 @@
           <div class="section-head">
             <div>
               <h2>מן העיתונות</h2>
-              <p>כאן נוסיף בהמשך כתבות/לינקים/תמונות</p>
+              <p>כתבות, ראיונות ופרסומים על הסטודיו והפרויקטים</p>
             </div>
             <a class="nav-cta" href="#contact">להזמנת שיחה</a>
           </div>
 
-          <div class="grid" aria-label="כרטיסי עיתונות לדוגמה">
-            <article class="card" role="group" aria-label="כרטיס לדוגמה">
-              <img src="assets/images/placeholder.svg" alt="" loading="lazy" />
+          <div class="grid" aria-label="כתבות ופרסומים">
+            <a
+              class="card"
+              href="https://wallsmag.co.il/tali-srur-baker/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="מסטנדרט קבלני לבית: שיפוץ פרויקט קבלן — כתבה ב־Walls (נפתח בחלון חדש)"
+            >
+              <img
+                src="assets/images/press_walls_tali_srur_baker.jpg"
+                alt="מטבח מהפרויקט, מתוך הכתבה ב־Walls"
+                width="900"
+                height="600"
+                loading="lazy"
+              />
               <div class="card-meta">
-                <strong>כתבה לדוגמה</strong>
-                <span>טקסט קצר על הפרויקט/הסטודיו</span>
+                <strong>מסטנדרט קבלני לבית: שיפוץ פרויקט קבלן</strong>
+                <span>Walls · דצמבר 2025</span>
               </div>
-            </article>
-            <article class="card" role="group" aria-label="כרטיס לדוגמה">
-              <img src="assets/images/placeholder.svg" alt="" loading="lazy" />
-              <div class="card-meta">
-                <strong>טלוויזיה / מדיה</strong>
-                <span>אפשר להחליף בלוגואים או קטע וידאו</span>
-              </div>
-            </article>
-            <article class="card" role="group" aria-label="כרטיס לדוגמה">
-              <img src="assets/images/placeholder.svg" alt="" loading="lazy" />
-              <div class="card-meta">
-                <strong>פרסום נוסף</strong>
-                <span>לינק לאתר/אינסטגרם/כתבה</span>
-              </div>
-            </article>
+            </a>
           </div>
         </div>
       </section>
 
-      <section id="contact" class="contact" aria-label="צור קשר">
-        <div class="container">
-          <div class="section-head">
-            <div>
-              <h2>צרו קשר</h2>
-              <p>נשמח לשמוע על הפרויקט שלכם</p>
-            </div>
-            <a class="nav-cta" data-instagram href="#" target="_blank" rel="noreferrer">אינסטגרם</a>
-          </div>
+      <section id="contact" class="contact" aria-label="צרו קשר">
+        <div class="container contact-inner">
+          <header class="contact-intro">
+            <p class="contact-kicker" lang="en">Contact</p>
+            <h2 class="contact-title">צרו קשר</h2>
+            <p class="contact-lead">נשמח לשמוע על הפרויקט שלכם וללוות אתכם משלב הרעיון ועד לחלל המוגמר.</p>
+          </header>
 
-          <div class="contact-grid">
-            <div class="contact-card">
-              <h3>פרטים</h3>
-              <ul class="contact-list">
-                <li><a data-phone href="#">טלפון</a></li>
-                <li><a data-email href="#">אימייל</a></li>
-                <li><span data-address></span></li>
-              </ul>
-              <p class="hint" style="margin: 14px 0 0 0">
-                האתר סטטי לחלוטין (עובד גם אופליין). לשליחה בפועל אפשר להשתמש בהעתקה
-                ללוח או ב־mailto, או להוסיף שירות טפסים בהמשך.
+          <div class="contact-split">
+            <div class="contact-aside">
+              <h3 class="contact-aside-title">פרטי קשר</h3>
+              <div class="contact-address" data-address></div>
+              <p class="contact-direct" data-contact-inline>
+                <span data-email-line>
+                  <a class="contact-channel" data-email href="#">אימייל</a>
+                </span>
+                <span class="contact-direct-sep" data-contact-sep aria-hidden="true">|</span>
+                <span data-phone-line>
+                  <span class="contact-tel-prefix" lang="en">Tel</span>
+                  <a class="contact-channel" data-phone href="#">טלפון</a>
+                </span>
+              </p>
+              <nav class="contact-socials" aria-label="רשתות חברתיות">
+                <a
+                  class="contact-social-btn"
+                  data-instagram
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="אינסטגרם (נפתח בחלון חדש)"
+                >
+                  <svg class="social-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      fill="currentColor"
+                      d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 1-2.881 0 1.44 1.44 0 0 1 2.881 0z"
+                    />
+                  </svg>
+                </a>
+                <a
+                  class="contact-social-btn"
+                  data-facebook
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="פייסבוק (נפתח בחלון חדש)"
+                >
+                  <svg class="social-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      fill="currentColor"
+                      d="M24 12.073C24 5.446 18.627 0 12 0S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                    />
+                  </svg>
+                </a>
+              </nav>
+              <p class="contact-footnote hint">
+                האתר סטטי; השליחה מתבצעת דרך העתקה ללוח או פתיחת מייל. ניתן לחבר שירות טפסים בעתיד.
               </p>
             </div>
 
-            <div class="contact-card">
-              <h3>הודעה</h3>
-              <form id="contactForm" class="form">
-                <div class="field">
-                  <label for="fName">שם</label>
-                  <input id="fName" name="name" autocomplete="name" />
+            <div class="contact-form-panel">
+              <form id="contactForm" class="contact-form">
+                <div class="contact-form-grid">
+                  <div class="contact-field">
+                    <label for="fName">שם</label>
+                    <input id="fName" name="name" type="text" autocomplete="name" />
+                  </div>
+                  <div class="contact-field">
+                    <label for="fPhone">טלפון נייד</label>
+                    <input id="fPhone" name="phone" type="tel" autocomplete="tel" />
+                  </div>
+                  <div class="contact-field contact-field--full">
+                    <label for="fEmail">כתובת דוא״ל</label>
+                    <input id="fEmail" name="email" type="email" autocomplete="email" />
+                  </div>
+                  <div class="contact-field contact-field--full">
+                    <label for="fSubject">נושא</label>
+                    <input id="fSubject" name="subject" type="text" autocomplete="off" />
+                  </div>
+                  <div class="contact-field contact-field--full">
+                    <label for="fLocation">מיקום הנכס / הפרויקט</label>
+                    <input id="fLocation" name="location" type="text" autocomplete="street-address" />
+                  </div>
+                  <div class="contact-field contact-field--full">
+                    <label for="fMsg">השאירו לנו הודעה</label>
+                    <textarea id="fMsg" name="message" rows="5"></textarea>
+                  </div>
                 </div>
-                <div class="field">
-                  <label for="fPhone">טלפון</label>
-                  <input id="fPhone" name="phone" autocomplete="tel" />
-                </div>
-                <div class="field full">
-                  <label for="fEmail">אימייל</label>
-                  <input id="fEmail" name="email" type="email" autocomplete="email" />
-                </div>
-                <div class="field full">
-                  <label for="fMsg">הודעה</label>
-                  <textarea id="fMsg" name="message"></textarea>
-                </div>
-                <div class="form-actions">
-                  <div class="hint" id="toast" hidden></div>
-                  <div style="display:flex; gap:10px; flex-wrap:wrap; width:100%">
-                    <button id="copyBtn" class="btn-dark" type="button">העתקה ללוח</button>
-                    <button id="mailBtn" class="btn-dark" type="button">פתיחת מייל</button>
-                    <button class="btn-dark" type="submit">איך שולחים?</button>
+                <div class="contact-form-actions">
+                  <div class="contact-toast hint" id="toast" hidden role="status"></div>
+                  <button class="contact-submit" type="submit">שלח</button>
+                  <div class="contact-form-alt">
+                    <button id="copyBtn" class="contact-link-btn" type="button">העתקה ללוח</button>
+                    <span class="contact-form-alt-sep" aria-hidden="true">·</span>
+                    <button id="mailBtn" class="contact-link-btn" type="button">פתיחת מייל</button>
                   </div>
                 </div>
               </form>
@@ -219,35 +329,18 @@
     <footer role="contentinfo">
       <div class="container footer-inner">
         <div>© <span data-year></span> <span data-studio-name>Tali Baker</span>. כל הזכויות שמורות.</div>
-        <div><a href="#top">למעלה</a></div>
+        <div>
+          <a href="#top" class="footer-back-top" aria-label="חזרה לראש העמוד">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 15l-6-6-6 6"/>
+            </svg>
+          </a>
+        </div>
       </div>
     </footer>
 
-    <!-- Lightbox -->
-    <div id="lightbox" class="lightbox" aria-hidden="true">
-      <div class="lightbox-dialog" role="dialog" aria-modal="true" aria-label="גלריית תמונות">
-        <div class="lb-top">
-          <div class="lb-title">
-            <strong id="lbProjectTitle">—</strong>
-            <span id="lbProjectMeta">—</span>
-          </div>
-          <div class="lb-actions">
-            <button id="lbClose" class="icon-btn" type="button" aria-label="סגור">✕</button>
-          </div>
-        </div>
-        <div class="lb-body">
-          <div class="lb-stage">
-            <img id="lbImage" src="assets/images/placeholder.svg" alt="" />
-            <div class="lb-nav" aria-hidden="true">
-              <button id="lbPrev" type="button" aria-label="הקודם">‹</button>
-              <button id="lbNext" type="button" aria-label="הבא">›</button>
-            </div>
-          </div>
-          <div id="lbThumbs" class="thumbs" aria-label="תמונות ממוזערות"></div>
-        </div>
-      </div>
-    </div>
-
+    <script src="assets/js/projects-data.js"></script>
+    <script src="assets/js/site-chrome.js"></script>
     <script src="assets/js/main.js"></script>
   </body>
 </html>

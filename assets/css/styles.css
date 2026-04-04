@@ -58,6 +58,24 @@ button, input, textarea { font: inherit; }
   justify-content: space-between;
   gap: 18px;
 }
+.header-end{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.header-socials{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-cta--header-icon{
+  padding: 8px 10px;
+}
+.nav-cta--header-icon .social-icon{
+  width: 20px;
+  height: 20px;
+}
 .brand{
   display: flex;
   align-items: center;
@@ -70,6 +88,10 @@ button, input, textarea { font: inherit; }
   border-radius: 14px;
   background: var(--bg-soft);
   border: 1px solid var(--line);
+}
+.brand img.brand-photo{
+  object-fit: cover;
+  border-radius: 50%;
 }
 .brand-title{
   display: flex;
@@ -112,6 +134,13 @@ button, input, textarea { font: inherit; }
 .nav-cta:hover{
   transform: translateY(-1px);
   box-shadow: 0 10px 26px rgba(0,0,0,0.10);
+}
+.nav-cta--icon{
+  padding: 10px 12px;
+  color: #111;
+}
+.nav-cta--icon .social-icon{
+  display: block;
 }
 
 .menu-btn{
@@ -160,12 +189,28 @@ button, input, textarea { font: inherit; }
   inset: 0;
   background: #f1ecea;
 }
-.hero-media img{
+.hero-slides{
+  position: absolute;
+  inset: 0;
+}
+.hero-slide{
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   filter: contrast(1.05) saturate(1.02);
-  transform: scale(1.02);
+  opacity: 0;
+  transition: opacity 1.45s cubic-bezier(0.45, 0, 0.55, 1);
+}
+.hero-slide.is-active{
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce){
+  .hero-slide{
+    transition: none;
+  }
 }
 .hero-overlay{
   position: absolute;
@@ -245,6 +290,12 @@ section{
   color: var(--muted);
   font-size: 14px;
 }
+.section-head-ctas{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
 
 /* Filter pills */
 .filters{
@@ -265,10 +316,68 @@ section{
   color: #000;
 }
 
-/* Projects grid */
+/* Projects — פס אופקי עם גלילה (בסגנון גלריות פורטפוליו) */
 .projects{
   background: #fff;
 }
+/* פס פרויקטים — כל פרויקט פעם אחת, גלילה אופקית (בלי שכפול DOM למרקיז) */
+.projects-strip-outer{
+  width: 100%;
+  margin-inline: calc(50% - 50vw);
+  padding-inline-start: max(var(--pad), env(safe-area-inset-inline-start, 0px));
+  padding-inline-end: max(var(--pad), env(safe-area-inset-inline-end, 0px));
+  box-sizing: border-box;
+}
+.projects-strip{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 14px;
+  direction: rtl;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: inline mandatory;
+  scroll-padding-inline: var(--pad);
+  padding-block: 6px 16px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.25) transparent;
+}
+.projects-strip:focus-visible{
+  outline: 3px solid rgba(0,0,0,0.35);
+  outline-offset: 2px;
+}
+.projects-strip::-webkit-scrollbar{
+  height: 8px;
+}
+.projects-strip::-webkit-scrollbar-thumb{
+  background: rgba(0,0,0,0.22);
+  border-radius: 999px;
+}
+.projects-strip .card{
+  flex: 0 0 auto;
+  grid-column: unset;
+  width: min(78vw, 420px);
+  min-height: 0;
+  aspect-ratio: 4 / 3;
+  scroll-snap-align: start;
+}
+@media (min-width: 981px){
+  .projects-strip .card{
+    width: min(38vw, 480px);
+  }
+}
+@media (max-width: 720px){
+  .projects-strip{
+    gap: 12px;
+    padding-block: 4px 12px;
+  }
+  .projects-strip .card{
+    width: min(84vw, 380px);
+    aspect-ratio: 3 / 4;
+  }
+}
+
 .grid{
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -277,6 +386,7 @@ section{
 .card{
   grid-column: span 4;
   position: relative;
+  display: block;
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid var(--line);
@@ -285,6 +395,12 @@ section{
   min-height: 280px;
   box-shadow: 0 10px 24px rgba(0,0,0,0.06);
   transition: transform 180ms ease, box-shadow 180ms ease;
+  text-decoration: none;
+  color: inherit;
+}
+a.card:focus-visible{
+  outline: 3px solid rgba(0,0,0,0.35);
+  outline-offset: 3px;
 }
 .card:hover{
   transform: translateY(-2px);
@@ -312,6 +428,21 @@ section{
   font-size: 13px;
   opacity: 0.9;
   margin-top: 4px;
+}
+
+/* מן העיתונות — כרטיסים מעט גדולים יותר (רשת 12 עמודות) */
+#press .card{
+  min-height: 320px;
+}
+@media (min-width: 981px){
+  #press .card{
+    grid-column: span 6;
+  }
+}
+@media (max-width: 720px){
+  #press .card{
+    min-height: 280px;
+  }
 }
 
 /* About */
@@ -345,66 +476,216 @@ section{
   object-fit: cover;
 }
 
-/* Contact */
+/* Contact — editorial split layout */
 .contact{
   background: #fff;
 }
-.contact-grid{
+.contact-inner{
+  padding-bottom: 8px;
+}
+.contact-intro{
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 48px;
+}
+.contact-kicker{
+  margin: 0 0 8px 0;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+}
+.contact-title{
+  margin: 0 0 12px 0;
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 4.5vw, 2.85rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #111;
+}
+.contact-lead{
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.65;
+  color: rgba(0,0,0,0.72);
+}
+.contact-split{
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 22px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+  gap: clamp(28px, 5vw, 56px);
   align-items: start;
 }
-.contact-card{
-  border: 1px solid var(--line);
-  border-radius: 22px;
-  padding: 18px;
-  background: #fff;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.04);
+.contact-aside-title{
+  margin: 0 0 18px 0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #111;
+  font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
 }
-.contact-card h3{
-  margin: 0 0 8px 0;
+.contact-address{
+  margin: 0 0 20px 0;
   font-size: 16px;
+  line-height: 1.75;
+  color: rgba(0,0,0,0.82);
 }
-.contact-list{
-  list-style: none;
-  padding: 0;
+.contact-direct{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+  margin: 0 0 22px 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.contact-direct-sep{
+  color: rgba(0,0,0,0.35);
+  user-select: none;
+}
+.contact-channel{
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  color: #111;
+}
+.contact-channel:hover{
+  color: rgba(0,0,0,0.65);
+}
+.contact-tel-prefix{
+  margin-inline-end: 4px;
+  color: rgba(0,0,0,0.5);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+.contact-tel-prefix::after{
+  content: ":";
+}
+.contact-socials{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.contact-social-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.14);
+  background: #fff;
+  color: #111;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+.contact-social-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+  border-color: rgba(0,0,0,0.22);
+}
+.contact-footnote{
   margin: 0;
-  color: rgba(0,0,0,0.8);
+  max-width: 340px;
+  line-height: 1.55;
 }
-.contact-list li{ margin: 10px 0; }
-.contact-list a{ text-decoration: underline; text-underline-offset: 3px; }
-.form{
+.contact-form-panel{
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: clamp(22px, 4vw, 34px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.06);
+}
+.contact-form-grid{
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 20px 18px;
 }
-.form .full{ grid-column: 1 / -1; }
-.field label{
+.contact-field--full{
+  grid-column: 1 / -1;
+}
+.contact-field label{
   display: block;
   font-size: 13px;
-  margin-bottom: 6px;
-  color: rgba(0,0,0,0.75);
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: rgba(0,0,0,0.72);
 }
-.field input, .field textarea{
+.contact-field input,
+.contact-field textarea{
   width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 11px 12px;
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.18);
+  border-radius: 0;
+  padding: 10px 0 12px 0;
+  background: transparent;
   outline: none;
+  font-size: 16px;
+  color: #111;
+  transition: border-color 160ms ease;
 }
-.field textarea{
-  min-height: 120px;
+.contact-field input:focus,
+.contact-field textarea:focus{
+  border-bottom-color: #111;
+}
+.contact-field textarea{
+  min-height: 140px;
   resize: vertical;
+  line-height: 1.55;
 }
-.form-actions{
-  grid-column: 1 / -1;
+.contact-form-actions{
+  margin-top: 28px;
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+}
+.contact-toast{
+  margin: 0;
+  text-align: center;
+}
+.contact-submit{
+  width: 100%;
+  border: none;
+  background: #111;
+  color: #fff;
+  padding: 16px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
+}
+.contact-submit:hover{
+  background: #000;
+}
+.contact-submit:active{
+  transform: scale(0.99);
+}
+.contact-form-alt{
+  display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
-  margin-top: 4px;
+  gap: 8px 12px;
+  font-size: 14px;
+}
+.contact-form-alt-sep{
+  color: rgba(0,0,0,0.35);
+}
+.contact-link-btn{
+  border: none;
+  background: none;
+  padding: 6px 4px;
+  font: inherit;
+  color: rgba(0,0,0,0.55);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.contact-link-btn:hover{
+  color: #111;
 }
 .hint{
   color: var(--muted);
@@ -436,131 +717,94 @@ footer{
 }
 .footer-inner a{ text-decoration: underline; text-underline-offset: 3px; }
 
-/* Lightbox */
-.lightbox{
-  display: none;
-}
-.lightbox.open{
-  display: grid;
-  position: fixed;
-  inset: 0;
-  z-index: 4000;
-  background: rgba(0,0,0,0.78);
+.footer-back-top{
+  display: inline-flex;
   align-items: center;
-  justify-items: center;
-  padding: 22px;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: rgba(0,0,0,0.75);
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
-.lightbox-dialog{
-  width: min(1100px, 100%);
-  background: rgba(255,255,255,0.98);
-  border-radius: 22px;
-  overflow: hidden;
-  box-shadow: 0 40px 90px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.20);
+.footer-back-top:hover{
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.25);
+  color: #000;
 }
-.lb-top{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 14px 14px;
-  border-bottom: 1px solid var(--line);
+.footer-back-top:focus-visible{
+  outline: 2px solid #000;
+  outline-offset: 3px;
+}
+
+/* דף פרויקט — גלריה אנכית (בסגנון אתרי תיק עבודות) */
+.project-page{
+  padding: 0 0 72px 0;
   background: #fff;
 }
-.lb-title{
+.project-intro-wrap{
+  padding-top: 28px;
+  padding-bottom: 36px;
+  max-width: 720px;
+}
+.project-back{
+  display: inline-block;
+  margin-bottom: 18px;
+  font-size: 14px;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.project-back:hover{ color: #000; }
+.project-page-title{
+  margin: 0 0 20px 0;
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  font-size: clamp(32px, 5vw, 48px);
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+  color: #111;
+}
+.project-body{
+  color: rgba(0,0,0,0.78);
+  font-size: 17px;
+  line-height: 1.85;
+}
+.project-body p{
+  margin: 0 0 1em 0;
+}
+.project-body p:last-child{ margin-bottom: 0; }
+.project-gallery{
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  min-width: 0;
+  gap: 14px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--pad);
 }
-.lb-title strong{
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.lb-title span{
-  font-size: 12px;
-  color: var(--muted);
-}
-.lb-actions{
-  display: flex;
-  gap: 8px;
-}
-.icon-btn{
-  width: 40px;
-  height: 40px;
+.project-photo{
+  margin: 0;
   border-radius: 12px;
+  overflow: hidden;
   border: 1px solid var(--line);
-  background: #fff;
-  cursor: pointer;
+  background: var(--bg-soft);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.08);
 }
-.icon-btn:hover{ background: rgba(0,0,0,0.04); }
-
-.lb-body{
-  display: grid;
-  grid-template-columns: 1fr;
-  background: #000;
-}
-.lb-stage{
-  position: relative;
-  background: #000;
-}
-.lb-stage img{
+.project-photo img{
   width: 100%;
-  height: min(66vh, 680px);
-  object-fit: contain;
-  background: #000;
+  height: auto;
+  display: block;
 }
-.lb-nav{
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 10px;
-  pointer-events: none;
-}
-.lb-nav button{
-  pointer-events: all;
-  width: 46px;
-  height: 46px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.22);
-  background: rgba(0,0,0,0.22);
-  color: #fff;
-  cursor: pointer;
-}
-.lb-nav button:hover{ background: rgba(0,0,0,0.32); }
-
-.thumbs{
-  display: flex;
-  gap: 8px;
-  overflow: auto;
-  padding: 12px;
-  background: #fff;
-  border-top: 1px solid var(--line);
-}
-.thumbs button{
-  border: 1px solid var(--line);
-  background: #fff;
-  padding: 0;
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  width: 86px;
-  height: 62px;
-  flex: 0 0 auto;
-}
-.thumbs button[aria-current="true"]{ outline: 3px solid rgba(0,0,0,0.25); }
-.thumbs img{ width: 100%; height: 100%; object-fit: cover; }
 
 /* Responsive */
 @media (max-width: 980px){
   .card{ grid-column: span 6; }
   .about-inner{ grid-template-columns: 1fr; }
   .about .portrait img{ height: 360px; }
-  .contact-grid{ grid-template-columns: 1fr; }
+  .contact-split{ grid-template-columns: 1fr; }
+  .contact-intro{ margin-bottom: 36px; }
 }
 @media (max-width: 720px){
   .nav{ display: none; }
@@ -569,7 +813,6 @@ footer{
   .drawer.open{ inset: 68px 0 0 0; }
   .card{ grid-column: span 12; min-height: 240px; }
   .hero{ min-height: 560px; }
-  .form{ grid-template-columns: 1fr; }
+  .contact-form-grid{ grid-template-columns: 1fr; }
   .btn, .btn-dark{ width: 100%; }
-  .form-actions{ gap: 8px; }
 }
